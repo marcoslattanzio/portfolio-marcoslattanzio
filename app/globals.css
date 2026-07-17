@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — estética editorial: crema muy claro + negro casi puro
+--------------------------------------------------------------------------- */
+@theme {
+  --color-cream: #f4f3ee;
+  --color-ink: #121210;
+  --color-muted: #77766e;
+  --color-line: #dedcd3;
+  --color-accent: #14cc45; /* verde código para hovers */
+  --font-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial,
+    ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
+}
+
+/* Modo oscuro: se intercambian los valores de los tokens, así todas las
+   utilidades (bg-cream, text-ink, border-line…) cambian solas.
+   El atributo data-theme lo pone el script inline del layout + el toggle. */
+:root {
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --color-cream: #131311;
+  --color-ink: #f0efe9;
+  --color-muted: #8f8e85;
+  --color-line: #2b2b27;
+  color-scheme: dark;
+}
+
+/* Cambio de tema con View Transitions: fundido de página completa */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: ease;
+}
+
+/* Respaldo (navegadores sin View Transitions): el toggle añade .theme-anim
+   durante ~600ms para que TODOS los colores fundan a la vez */
+.theme-anim,
+.theme-anim *,
+.theme-anim *::before,
+.theme-anim *::after {
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease,
+    border-color 0.5s ease,
+    fill 0.5s ease !important;
+}
+
+html {
+  background: var(--color-cream);
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+/* Lenis (smooth scroll) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Subrayado animado de izquierda a derecha (hover en enlaces)
+--------------------------------------------------------------------------- */
+.u-line {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+.u-line:hover,
+.u-line:focus-visible {
+  color: var(--color-accent);
+}
+.u-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.15em;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.u-line:hover::after,
+.u-line:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+/* Variante: subrayado visible que se retira y vuelve */
+.u-line-active::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* ---------------------------------------------------------------------------
+   Acordeón de proyectos destacados: el panel bajo el cursor se ensancha
+   y los demás se atenúan ligeramente
+--------------------------------------------------------------------------- */
+.acc-item {
+  flex: 1 1 0%;
+  transition:
+    flex 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s ease;
+}
+.acc-group:hover .acc-item:not(:hover) {
+  opacity: 0.55;
+}
+.acc-item:hover {
+  flex: 2.4 1 0%;
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Marquee
+--------------------------------------------------------------------------- */
+.marquee-track {
+  display: inline-flex;
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+  will-change: transform;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Formulario — focus elegante (línea inferior que se dibuja)
+--------------------------------------------------------------------------- */
+.field {
+  position: relative;
+}
+.field input,
+.field textarea {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-line);
+  padding: 0.9rem 0;
+  font-size: 1rem;
+  color: var(--color-ink);
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.3s ease;
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--color-muted);
+}
+.field::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.field:focus-within::after {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+   Accesibilidad: reduce motion — corta todas las animaciones CSS
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

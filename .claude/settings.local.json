@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(which node *)",
+      "Read(//c/Users/marco/AppData/Roaming/**)",
+      "Read(//c/Users/marco/AppData/Local/Microsoft/WinGet/**)",
+      "PowerShell(winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements --silent)",
+      "Bash(printf '%s\\\\n' '- [Portfolio filmmaker — setup]\\(portfolio-filmmaker-setup.md\\) — Next.js+GSAP+Lenis en \"00 Documentos/Portfolio/Web\"; Node vía winget, PATH manual' >> \"/c/Users/marco/.claude/projects/C--Users-marco-Documents-00-Documentos-Portfolio-Web/memory/MEMORY.md\")"
+    ]
+  }
+}

@@ -1,0 +1,271 @@
+"use client";
+
+import { useRef } from "react";
+import { gsap } from "@/lib/gsap";
+import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
+import TextReveal from "@/components/TextReveal";
+
+// Apertura "constelación": frase grande centrada y fotos pequeñas dispersas
+// alrededor con sensación de profundidad. Cada foto tiene un factor "depth"
+// (0–1): las cercanas son más grandes, opacas y se mueven más; las lejanas,
+// tenues y más lentas. Tres movimientos combinados en capas anidadas:
+//   exterior → parallax de scroll · medio → parallax de ratón ·
+//   interior → aproximación: cada foto viene hacia el espectador en bucle
+//   (crece, se separa del centro acelerando y se funde al "pasar de largo")
+// Posición (left/top en %), ancho y profundidad de cada hueco se ajustan aquí:
+// Nube compacta y homogénea alrededor del titular: retícula de 4 bandas
+// concentrada en el centro del lienzo (10%–78%), tamaños en un rango estrecho
+// (110–200) para que ninguna foto domine y el conjunto se lea como un todo.
+const LAYOUT = [
+  { left: "16%", top: "14%", w: 205, depth: 0.8 },
+  { left: "30%", top: "10%", w: 170, depth: 0.5 },
+  { left: "44%", top: "13%", w: 145, depth: 0.35 },
+  { left: "57%", top: "10%", w: 180, depth: 0.6 },
+  { left: "70%", top: "14%", w: 205, depth: 0.85 },
+  { left: "10%", top: "32%", w: 240, depth: 1 },
+  { left: "27%", top: "28%", w: 145, depth: 0.3 },
+  { left: "42%", top: "30%", w: 130, depth: 0.25 },
+  { left: "58%", top: "28%", w: 150, depth: 0.35 },
+  { left: "74%", top: "32%", w: 240, depth: 1 },
+  { left: "18%", top: "48%", w: 170, depth: 0.55 },
+  { left: "33%", top: "52%", w: 150, depth: 0.4 },
+  { left: "50%", top: "54%", w: 160, depth: 0.45 },
+  { left: "65%", top: "50%", w: 175, depth: 0.55 },
+  { left: "78%", top: "48%", w: 190, depth: 0.7 },
+  { left: "12%", top: "66%", w: 200, depth: 0.75 },
+  { left: "28%", top: "70%", w: 210, depth: 0.85 },
+  { left: "46%", top: "72%", w: 220, depth: 0.9 },
+  { left: "62%", top: "68%", w: 205, depth: 0.8 },
+  { left: "76%", top: "66%", w: 180, depth: 0.6 },
+];
+
+export default function HeroConstellation({ tagline, images }) {
+  const sectionRef = useRef(null);
+
+  useIsoLayoutEffect(() => {
+    if (prefersReducedMotion()) return;
+    const section = sectionRef.current;
+    const items = gsap.utils.toArray(section.querySelectorAll("[data-const-item]"));
+    let onMove = null;
+    const dragCleanups = [];
+
+    const ctx = gsap.context(() => {
+      // entrada: aparecen escalonadas mientras se retira el preloader
+      // (fromTo con final explícito — from() puede capturar 0 con StrictMode)
+      items.forEach((el) => {
+        const baseOpacity = parseFloat(el.dataset.opacity) || 1;
+        gsap.fromTo(
+          el,
+          { opacity: 0 },
+          {
+            opacity: baseOpacity,
+            duration: 1.2,
+            ease: "power2.out",
+            delay: 1.1 + gsap.utils.random(0, 0.7),
+          },
+        );
+      });
+
+      // en pantallas pequeñas los ciclos van más lentos: menos frenesí
+      const slowdown = window.innerWidth < 768 ? 1.4 : 1;
+
+      items.forEach((el, i) => {
+        // fotos ocultas en móvil (display:none): sin animaciones ni triggers
+        if (!el.offsetParent) return;
+        const depth = parseFloat(el.dataset.depth) || 0.5;
+        const motion = el.querySelector("[data-const-motion]");
+
+        // FLOTADO PERPETUO en su sitio (como Floema): la foto no nace ni sale,
+        // siempre está ahí y deriva muy suavemente alrededor de su posición
+        // "base", con amplitud proporcional a su profundidad. La base puede
+        // cambiar: si el usuario arrastra la foto, el vaivén continúa alrededor
+        // del punto donde la haya soltado.
+        const amp = 10 + depth * 22; // px de deriva (las cercanas se mueven más)
+        const makeFloat = (baseX, baseY) => {
+          const tl = gsap.timeline({ repeat: -1, yoyo: true });
+          tl.fromTo(
+            motion,
+            { x: baseX, y: baseY },
+            {
+              x: baseX + gsap.utils.random(-amp, amp),
+              y: baseY + gsap.utils.random(-amp, amp),
+              rotation: gsap.utils.random(-3, 3),
+              duration: gsap.utils.random(7, 11) * slowdown,
+              ease: "sine.inOut",
+            },
+          );
+          return tl;
+        };
+        let float = makeFloat(0, 0);
+        // cada foto arranca en una fase distinta de su vaivén
+        float.progress(gsap.utils.random(0, 1));
+
+        // arrastre con el ratón: mata su flotado, la foto sigue al cursor y al
+        // soltarla SE QUEDA donde el usuario la deje — el vaivén se reanuda
+        // alrededor de esa nueva posición
+        if (window.matchMedia("(pointer: fine)").matches) {
+          let dragging = false;
+          let sx = 0, sy = 0, bx = 0, by = 0, px = 0, py = 0;
+          const origZ = el.style.zIndex;
+          // seguimiento elástico: se crean FRESCOS en cada agarre — matar el
+          // tween interno de un quickTo lo inutiliza para siempre, y eso
+          // impedía volver a mover una foto ya soltada
+          let followX = null;
+          let followY = null;
+
+          const down = (e) => {
+            e.preventDefault();
+            dragging = true;
+            float.kill(); // el vaivén actual muere: se recreará donde la suelte
+            try {
+              el.setPointerCapture(e.pointerId);
+            } catch {}
+            gsap.set(el, { zIndex: 15 });
+            // "levantar" la foto: crece un pelín al agarrarla
+            gsap.to(el, { scale: 1.08, duration: 0.45, ease: "power3.out" });
+            followX = gsap.quickTo(motion, "x", {
+              duration: 0.35,
+              ease: "power3.out",
+            });
+            followY = gsap.quickTo(motion, "y", {
+              duration: 0.35,
+              ease: "power3.out",
+            });
+            sx = px = e.clientX;
+            sy = py = e.clientY;
+            bx = gsap.getProperty(motion, "x");
+            by = gsap.getProperty(motion, "y");
+          };
+          const move = (e) => {
+            if (!dragging || !followX) return;
+            px = e.clientX;
+            py = e.clientY;
+            followX(bx + e.clientX - sx);
+            followY(by + e.clientY - sy);
+          };
+          const up = () => {
+            if (!dragging) return;
+            dragging = false;
+            if (followX) {
+              followX.tween && followX.tween.kill();
+              followY.tween && followY.tween.kill();
+              followX = followY = null;
+            }
+            gsap.to(el, { scale: 1, duration: 0.6, ease: "power3.out" });
+            gsap.set(el, { zIndex: origZ });
+            // la foto se queda aquí: nuevo vaivén alrededor de este punto
+            float = makeFloat(
+              gsap.getProperty(motion, "x"),
+              gsap.getProperty(motion, "y"),
+            );
+          };
+
+          el.addEventListener("pointerdown", down);
+          el.addEventListener("pointermove", move);
+          el.addEventListener("pointerup", up);
+          el.addEventListener("pointercancel", up);
+          dragCleanups.push(() => {
+            el.removeEventListener("pointerdown", down);
+            el.removeEventListener("pointermove", move);
+            el.removeEventListener("pointerup", up);
+            el.removeEventListener("pointercancel", up);
+          });
+        }
+
+        // parallax de scroll al abandonar la sección (capa exterior)
+        gsap.to(el, {
+          y: () => depth * -90,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+
+      // parallax de ratón (capa media): las cercanas siguen más al cursor
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const movers = items.map((el) => {
+          const wrap = el.querySelector("[data-const-mouse]");
+          const depth = parseFloat(el.dataset.depth) || 0.5;
+          return {
+            depth,
+            xTo: gsap.quickTo(wrap, "x", { duration: 1, ease: "power3.out" }),
+            yTo: gsap.quickTo(wrap, "y", { duration: 1, ease: "power3.out" }),
+          };
+        });
+        onMove = (e) => {
+          const nx = e.clientX / window.innerWidth - 0.5;
+          const ny = e.clientY / window.innerHeight - 0.5;
+          movers.forEach(({ depth, xTo, yTo }) => {
+            xTo(-nx * 44 * depth);
+            yTo(-ny * 32 * depth);
+          });
+        };
+        window.addEventListener("mousemove", onMove, { passive: true });
+      }
+    }, section);
+
+    return () => {
+      if (onMove) window.removeEventListener("mousemove", onMove);
+      dragCleanups.forEach((fn) => fn());
+      ctx.revert();
+    };
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative h-svh w-full overflow-hidden"
+    >
+      {/* nube de fotos */}
+      {images.map((img, i) => {
+        const slot = LAYOUT[i % LAYOUT.length];
+        return (
+          <div
+            key={img.src + i}
+            data-const-item
+            data-depth={slot.depth}
+            data-opacity={(0.22 + slot.depth * 0.78).toFixed(2)}
+            className={`absolute cursor-grab select-none will-change-transform active:cursor-grabbing ${
+              slot.depth < 0.5 ? "hidden md:block" : ""
+            }`}
+            style={{
+              left: slot.left,
+              top: slot.top,
+              width: `clamp(70px, ${(slot.w / 14.4).toFixed(2)}vw, ${slot.w}px)`,
+              opacity: 0.22 + slot.depth * 0.78,
+              // las fotos se apilan entre sí por profundidad, pero SIEMPRE
+              // por debajo del titular (z-20); al arrastrar suben a 15
+              zIndex: Math.round(slot.depth * 10),
+            }}
+          >
+            <div data-const-mouse className="will-change-transform">
+              <div data-const-motion className="will-change-transform">
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  draggable={false}
+                  className="pointer-events-none h-auto w-full"
+                />
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* frase central, SIEMPRE por encima de la nube (deja pasar el ratón
+          para poder agarrar las fotos que quedan detrás) */}
+      <div className="pointer-events-none relative z-20 flex h-full items-center justify-center px-5">
+        <TextReveal
+          as="h1"
+          text={tagline}
+          className="max-w-5xl text-center text-4xl font-light leading-[1.15] tracking-tight md:text-6xl"
+          delay={0.9}
+        />
+      </div>
+    </section>
+  );
+}
