@@ -6,7 +6,6 @@ import ScrollManager from "@/components/ScrollManager";
 import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,7 +44,6 @@ export default function RootLayout({ children }) {
         <LenisProvider>
           <ScrollManager />
           <Preloader />
-          <CustomCursor />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

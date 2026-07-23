@@ -8,29 +8,40 @@ import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
 // velocidad mientras cruza el viewport. Repartiendo velocidades distintas
 // entre bloques vecinos se consigue el parallax de página completa.
 // speed > 0 sube más rápido que el scroll; speed < 0 se queda atrás.
-export default function Drift({ speed = 0.3, className = "", children }) {
+export default function Drift({
+  speed = 0.3,
+  distance = 0.72,
+  className = "",
+  children,
+}) {
   const ref = useRef(null);
 
   useIsoLayoutEffect(() => {
     if (prefersReducedMotion()) return;
     const el = ref.current;
-    if (!el.offsetParent) return; // oculto: sin trigger
+    if (!el.getClientRects().length) return; // oculto: sin trigger
 
     const ctx = gsap.context(() => {
-      gsap.to(el, {
-        y: () => speed * -120,
-        ease: "none",
-        scrollTrigger: {
-          trigger: el,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
+      // Deriva proporcional a la altura del viewport para que el parallax sea
+      // evidente durante todo el recorrido de la pieza.
+      gsap.fromTo(
+        el,
+        { y: () => speed * window.innerHeight * distance },
+        {
+          y: () => speed * -window.innerHeight * distance,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
         },
-      });
+      );
     }, el);
 
     return () => ctx.revert();
-  }, [speed]);
+  }, [distance, speed]);
 
   return (
     <div ref={ref} className={`will-change-transform ${className}`}>

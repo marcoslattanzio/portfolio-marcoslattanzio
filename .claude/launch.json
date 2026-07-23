@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "dev",
-      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
-      "runtimeArgs": ["node_modules\\next\\dist\\bin\\next", "dev"],
-      "port": 3000
+      "runtimeExecutable": "/bin/bash",
+      "runtimeArgs": ["./dev-server.sh"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site, nav, socials } from "@/data/content";
 import BackToTop from "@/components/BackToTop";
+import MeshText from "@/components/MeshText";
 
 // Footer: nombre grande, tres columnas iguales (menú, redes, contacto) y una
 // barra inferior con ©, claim y volver arriba.
@@ -8,9 +9,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-line">
       <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-10 md:py-24">
-        <p className="text-[12vw] font-light leading-none tracking-tight md:text-[7vw]">
-          {site.name}
-        </p>
+        <MeshText text={site.name} weight={300} />
 
         <div className="mt-12 grid grid-cols-1 gap-10 border-t border-line pt-10 sm:grid-cols-3 md:mt-16 md:gap-6">
           <div>

@@ -380,16 +380,37 @@ export const about = {
     "https://picsum.photos/seed/viento/800/600", // TODO: EDITAR
   ],
   intro: "Filmmaker y fotógrafo afincado en Valencia.", // TODO: EDITAR — frase corta bajo el titular
+  // Frase de apertura grande y centrada del hero de "Sobre mí"
+  statement:
+    "Filmmaker y fotógrafo afincado en Valencia, contando historias en cualquier parte.", // TODO: EDITAR
   bio: [
     "Escribe aquí el primer párrafo de tu biografía. Quién eres, de dónde vienes, qué te mueve a coger una cámara.", // TODO: EDITAR
     "Segundo párrafo: tu enfoque, tu manera de trabajar, los proyectos que te interesan. Mantén un tono cercano y directo.", // TODO: EDITAR
   ],
+  // Bloques de historia: etiqueta (izquierda) + párrafo que se revela palabra a
+  // palabra al scrollear (derecha). Añade o quita los que quieras.
+  story: [
+    {
+      label: "Quién soy", // TODO: EDITAR
+      body: "Soy Marcos Lattanzio, director y fotógrafo. Llevo más de una década detrás de la cámara, entre el documental, la publicidad y el retrato, buscando siempre la imagen que respira.", // TODO: EDITAR
+    },
+    {
+      label: "Cómo trabajo", // TODO: EDITAR
+      body: "Empiezo por entender el proyecto de verdad: la marca, el público y la historia detrás del encargo. A partir de ahí propongo una dirección clara y cuido cada decisión de luz, ritmo y montaje.", // TODO: EDITAR
+    },
+    {
+      label: "Filosofía", // TODO: EDITAR
+      body: "No sigo tendencias porque sí. Cada proyecto, grande o pequeño, merece el mismo cuidado: algo honesto, bien hecho y pensado para durar.", // TODO: EDITAR
+    },
+  ],
+  // Cada servicio tiene una imagen que aparece flotando junto al cursor al
+  // pasar el ratón por su fila (preview interactivo). Cambia la URL por tu foto.
   services: [
-    { title: "Grabación de vídeo profesional", detail: "Rodajes para marcas, eventos y proyectos personales." }, // TODO: EDITAR detalle
-    { title: "Edición de vídeo", detail: "Montaje con ritmo, del bruto a la pieza final." }, // TODO: EDITAR detalle
-    { title: "Color grading", detail: "Etalonaje y look final para que cada plano respire." }, // TODO: EDITAR detalle
-    { title: "Fotografía profesional", detail: "Retrato, editorial y campaña." }, // TODO: EDITAR detalle
-    { title: "Edición de fotografía", detail: "Revelado y retoque fino, sin artificios." }, // TODO: EDITAR detalle
+    { title: "Grabación de vídeo profesional", detail: "Rodajes para marcas, eventos y proyectos personales.", image: "https://picsum.photos/seed/rodaje/600/750" }, // TODO: EDITAR detalle + imagen
+    { title: "Edición de vídeo", detail: "Montaje con ritmo, del bruto a la pieza final.", image: "https://picsum.photos/seed/montaje/600/750" }, // TODO: EDITAR detalle + imagen
+    { title: "Color grading", detail: "Etalonaje y look final para que cada plano respire.", image: "https://picsum.photos/seed/etalonaje/600/750" }, // TODO: EDITAR detalle + imagen
+    { title: "Fotografía profesional", detail: "Retrato, editorial y campaña.", image: "https://picsum.photos/seed/retratos/600/750" }, // TODO: EDITAR detalle + imagen
+    { title: "Edición de fotografía", detail: "Revelado y retoque fino, sin artificios.", image: "https://picsum.photos/seed/revelado/600/750" }, // TODO: EDITAR detalle + imagen
   ],
 };
 
