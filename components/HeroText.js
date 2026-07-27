@@ -30,7 +30,7 @@ export default function HeroText({ title, subtitle }) {
   return (
     <div
       ref={containerRef}
-      className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col justify-end px-5 pb-16 md:px-10 md:pb-20 will-change-transform"
+      className="relative z-10 flex h-full flex-col justify-end px-5 pb-16 md:px-10 md:pb-20 will-change-transform"
     >
       <TextReveal
         as="h2"
