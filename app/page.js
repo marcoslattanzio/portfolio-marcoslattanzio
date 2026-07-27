@@ -2,6 +2,7 @@ import Link from "next/link";
 import { home, projects, site } from "@/data/content";
 import HeroConstellation from "@/components/HeroConstellation";
 import HeroMedia from "@/components/HeroMedia";
+import HeroText from "@/components/HeroText";
 import TextReveal from "@/components/TextReveal";
 import Collage from "@/components/Collage";
 import FeaturedAccordion from "@/components/FeaturedAccordion";
@@ -30,20 +31,7 @@ export default function HomePage() {
           className="absolute inset-0 h-full w-full"
         />
         <div className="absolute inset-0 bg-cream/25" />
-        <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col justify-end px-5 pb-16 md:px-10 md:pb-20">
-          <TextReveal
-            as="h2"
-            text={home.hero.title}
-            className="text-[13vw] font-light leading-[0.95] tracking-tight md:text-[9vw]"
-            delay={0.2}
-          />
-          <TextReveal
-            as="p"
-            text={home.hero.subtitle}
-            className="mt-6 max-w-md text-sm font-light leading-relaxed text-ink/80 md:text-base"
-            delay={0.5}
-          />
-        </div>
+        <HeroText title={home.hero.title} subtitle={home.hero.subtitle} />
         <p className="absolute bottom-6 right-5 z-10 text-[0.65rem] uppercase tracking-[0.2em] text-muted md:right-10">
           Scroll
         </p>
