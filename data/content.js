@@ -56,22 +56,22 @@ export const home = {
   constellation: {
     tagline: "Historias en movimiento, hechas con luz.", // TODO: EDITAR — frase central de la apertura
     images: [
-      { src: "/images/constellation-06.jpg", alt: "" }, // estudio izq
-      { src: "/images/constellation-01.jpg", alt: "" }, // retrato centro-izq
-      { src: "/images/constellation-04.jpg", alt: "" }, // retrato centro
-      { src: "/images/constellation-07.jpg", alt: "" }, // retrato centro-der
-      { src: "/images/constellation-05.jpg", alt: "" }, // DERECHA arriba (destacado)
-      { src: "/images/constellation-08.jpg", alt: "" }, // retrato izq medio
-      { src: "/images/constellation-09.jpg", alt: "" }, // pantalla centro-izq
-      { src: "/images/constellation-02.jpg", alt: "" }, // zapatos centro
-      { src: "/images/constellation-03.jpg", alt: "" }, // cámara centro-der
-      { src: "/images/constellation-10.jpg", alt: "" }, // DERECHA medio
-      { src: "/images/constellation-11.jpg", alt: "" }, // paisaje izq
-      { src: "/images/constellation-12.jpg", alt: "" }, // paisaje centro-izq
-      { src: "/images/constellation-16.jpg", alt: "" }, // B&N centro
-      { src: "/images/constellation-13.jpg", alt: "" }, // paisaje centro-der
-      { src: "/images/constellation-14.jpg", alt: "" }, // DERECHA abajo
-      { src: "/images/constellation-15.jpg", alt: "" }, // paisaje izq abajo
+      { src: "/images/constellation-04.jpg", alt: "" }, // retrato arriba
+      { src: "/images/constellation-07.jpg", alt: "" }, // retrato centro-izq arriba
+      { src: "/images/constellation-05.jpg", alt: "" }, // retrato centro arriba
+      { src: "/images/constellation-08.jpg", alt: "" }, // retrato centro-der arriba
+      { src: "/images/constellation-09.jpg", alt: "" }, // pantalla centro-der arriba
+      { src: "/images/constellation-01.jpg", alt: "" }, // IZQUIERDA EXTREMA medio
+      { src: "/images/constellation-02.jpg", alt: "" }, // zapatos centro-izq
+      { src: "/images/constellation-03.jpg", alt: "" }, // cámara centro
+      { src: "/images/constellation-10.jpg", alt: "" }, // paisaje centro-der
+      { src: "/images/constellation-11.jpg", alt: "" }, // paisaje DERECHA medio
+      { src: "/images/constellation-12.jpg", alt: "" }, // paisaje izq medio-abajo
+      { src: "/images/constellation-16.jpg", alt: "" }, // B&N centro-izq
+      { src: "/images/constellation-15.jpg", alt: "" }, // paisaje chica centro (más centrado)
+      { src: "/images/constellation-13.jpg", alt: "" }, // paisaje centro-der medio-abajo
+      { src: "/images/constellation-06.jpg", alt: "" }, // DERECHA EXTREMA abajo
+      { src: "/images/constellation-14.jpg", alt: "" }, // paisaje agua izq abajo
     ],
   },
 
