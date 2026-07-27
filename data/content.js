@@ -56,26 +56,22 @@ export const home = {
   constellation: {
     tagline: "Historias en movimiento, hechas con luz.", // TODO: EDITAR — frase central de la apertura
     images: [
-      { src: "https://picsum.photos/seed/velero/400/500", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/tinta/400/280", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/cobre/300/400", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/pinar/400/260", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/ladrillo/300/380", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/cristal/380/500", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/humo/300/360", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/malla/260/340", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/patio/400/300", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/farola/300/400", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/madera/360/240", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/arena/300/390", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/cauce/380/280", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/tejado/300/400", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/roca/300/400", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/estela/400/300", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/corriente/300/380", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/llano/400/280", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/cabo/300/400", alt: "" }, // TODO: EDITAR
-      { src: "https://picsum.photos/seed/rastro/380/300", alt: "" }, // TODO: EDITAR
+      { src: "/images/constellation-01.jpg", alt: "" },
+      { src: "/images/constellation-02.jpg", alt: "" },
+      { src: "/images/constellation-03.jpg", alt: "" },
+      { src: "/images/constellation-04.jpg", alt: "" },
+      { src: "/images/constellation-05.jpg", alt: "" },
+      { src: "/images/constellation-06.jpg", alt: "" },
+      { src: "/images/constellation-07.jpg", alt: "" },
+      { src: "/images/constellation-08.jpg", alt: "" },
+      { src: "/images/constellation-09.jpg", alt: "" },
+      { src: "/images/constellation-10.jpg", alt: "" },
+      { src: "/images/constellation-11.jpg", alt: "" },
+      { src: "/images/constellation-12.jpg", alt: "" },
+      { src: "/images/constellation-13.jpg", alt: "" },
+      { src: "/images/constellation-14.jpg", alt: "" },
+      { src: "/images/constellation-15.jpg", alt: "" },
+      { src: "/images/constellation-16.jpg", alt: "" },
     ],
   },
 
