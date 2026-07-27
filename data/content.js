@@ -71,7 +71,6 @@ export const home = {
       { src: "/images/constellation-13.jpg", alt: "" },
       { src: "/images/constellation-14.jpg", alt: "" },
       { src: "/images/constellation-15.jpg", alt: "" },
-      { src: "/images/constellation-16.jpg", alt: "" },
     ],
   },
 
