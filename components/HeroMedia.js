@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
 
@@ -10,6 +10,15 @@ import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
 //   (start "top top"), así el primer gesto de scroll no corrige nada de golpe.
 export default function HeroMedia({ video, image, className = "" }) {
   const wrapRef = useRef(null);
+  const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   useIsoLayoutEffect(() => {
     if (prefersReducedMotion()) return;
@@ -45,15 +54,25 @@ export default function HeroMedia({ video, image, className = "" }) {
   return (
     <div ref={wrapRef} className={`overflow-hidden ${className}`}>
       {video ? (
-        <video
-          src={video}
-          poster={image}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className={mediaClass}
-        />
+        <>
+          <video
+            ref={videoRef}
+            src={video}
+            poster={image}
+            autoPlay
+            muted={isMuted}
+            loop
+            playsInline
+            className={mediaClass}
+          />
+          <button
+            onClick={toggleMute}
+            className="absolute right-5 bottom-6 z-20 md:right-10 md:bottom-10 text-white bg-black/40 hover:bg-black/60 backdrop-blur-sm px-3 py-2 rounded text-xs uppercase tracking-wider transition"
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+          >
+            {isMuted ? "🔊 Unmute" : "🔇 Mute"}
+          </button>
+        </>
       ) : (
         <img src={image} alt="" className={mediaClass} />
       )}

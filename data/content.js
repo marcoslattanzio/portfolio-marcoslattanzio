@@ -44,7 +44,7 @@ export const home = {
   hero: {
     // TODO: pegar URL del vídeo .mp4 para abrir la web (autohospedado en /public
     // ej. "/videos/hero.mp4", o desde un CDN). Si se deja vacío, se usa la imagen.
-    video: "",
+    video: "/videos/output.mp4",
     image: "https://picsum.photos/seed/atlas/2400/1400", // TODO: EDITAR — imagen de respaldo/poster (2400x1400 aprox)
     title: "Marcos Lattanzio", // TODO: EDITAR — titular grande del hero
     subtitle: "Filmmaker & Photographer — historias en movimiento y en silencio.", // TODO: EDITAR
