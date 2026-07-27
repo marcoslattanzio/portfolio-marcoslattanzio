@@ -67,10 +67,47 @@ export default function HeroMedia({ video, image, className = "" }) {
           />
           <button
             onClick={toggleMute}
-            className="absolute right-5 bottom-6 z-20 md:right-10 md:bottom-10 text-white bg-black/40 hover:bg-black/60 backdrop-blur-sm px-3 py-2 rounded text-xs uppercase tracking-wider transition"
-            aria-label={isMuted ? "Unmute video" : "Mute video"}
+            aria-label={isMuted ? "Activar sonido" : "Silenciar"}
+            aria-pressed={!isMuted}
+            className="group absolute bottom-6 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/25 text-white/90 backdrop-blur-md transition-colors duration-300 hover:border-white/50 hover:bg-black/45 md:bottom-10 md:right-10"
           >
-            {isMuted ? "🔊 Unmute" : "🔇 Mute"}
+            {/* icono de altavoz: las ondas se dibujan/borran al mutear */}
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 10v4h4l5 4V6L7 10H3z" fill="currentColor" stroke="none" />
+              <path
+                d="M15.5 8.5a5 5 0 0 1 0 7"
+                className="origin-[13px_12px] transition-all duration-300 ease-out"
+                style={{
+                  opacity: isMuted ? 0 : 1,
+                  transform: isMuted ? "scale(0.6)" : "scale(1)",
+                }}
+              />
+              <path
+                d="M18 6a9 9 0 0 1 0 12"
+                className="origin-[13px_12px] transition-all duration-300 ease-out"
+                style={{
+                  opacity: isMuted ? 0 : 1,
+                  transform: isMuted ? "scale(0.6)" : "scale(1)",
+                }}
+              />
+              <path
+                d="M16 9l5 6M21 9l-5 6"
+                className="transition-all duration-300 ease-out"
+                style={{
+                  opacity: isMuted ? 1 : 0,
+                  transform: isMuted ? "scale(1)" : "scale(0.6)",
+                }}
+              />
+            </svg>
           </button>
         </>
       ) : (
