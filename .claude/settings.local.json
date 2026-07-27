@@ -5,7 +5,18 @@
       "Read(//c/Users/marco/AppData/Roaming/**)",
       "Read(//c/Users/marco/AppData/Local/Microsoft/WinGet/**)",
       "PowerShell(winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements --silent)",
-      "Bash(printf '%s\\\\n' '- [Portfolio filmmaker — setup]\\(portfolio-filmmaker-setup.md\\) — Next.js+GSAP+Lenis en \"00 Documentos/Portfolio/Web\"; Node vía winget, PATH manual' >> \"/c/Users/marco/.claude/projects/C--Users-marco-Documents-00-Documentos-Portfolio-Web/memory/MEMORY.md\")"
+      "Bash(printf '%s\\\\n' '- [Portfolio filmmaker — setup]\\(portfolio-filmmaker-setup.md\\) — Next.js+GSAP+Lenis en \"00 Documentos/Portfolio/Web\"; Node vía winget, PATH manual' >> \"/c/Users/marco/.claude/projects/C--Users-marco-Documents-00-Documentos-Portfolio-Web/memory/MEMORY.md\")",
+      "Bash(find /usr/local -name node 2>/dev/null | head -5)",
+      "Read(//Users/marcoslattanzio/.nvm/versions/**)",
+      "Read(//Users/marcoslattanzio/.local/share/nvm/versions/**)",
+      "Bash(ls -la /opt/homebrew/bin/node 2>/dev/null || ls -la /usr/local/bin/node 2>/dev/null || echo \"node not found\")",
+      "Bash(kill 12258)",
+      "Bash(chmod +x /Users/marcoslattanzio/portfolio-marcoslattanzio/dev-server.sh)",
+      "Bash(kill 4743)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('deps:', Object.keys\\({...p.dependencies,...p.devDependencies}\\).join\\(', '\\)\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
