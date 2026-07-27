@@ -14,10 +14,13 @@ export default function HeroText({ title, subtitle }) {
     if (!container) return;
 
     const ctx = gsap.context(() => {
-      // Después de 3 segundos: anima el contenedor a la izquierda y pequeño
+      // Tras 3 s el bloque encoge PEGADO al borde inferior izquierdo:
+      // el origen de la transformación manda — sin él, scale() encoge hacia
+      // el centro del contenedor (que ocupa todo el ancho) y el texto acaba
+      // en mitad de la pantalla.
+      gsap.set(container, { transformOrigin: "left bottom" });
       gsap.to(container, {
-        x: -120,
-        scale: 0.5,
+        scale: 0.42,
         duration: 1,
         delay: 3,
         ease: "power2.inOut",
