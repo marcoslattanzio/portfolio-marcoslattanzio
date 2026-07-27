@@ -32,9 +32,6 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-cream/25" />
         <HeroText title={home.hero.title} subtitle={home.hero.subtitle} />
-        <p className="absolute bottom-6 right-5 z-10 text-[0.65rem] uppercase tracking-[0.2em] text-muted md:right-10">
-          Scroll
-        </p>
       </section>
 
       {/* COLLAGE flotante con parallax */}
