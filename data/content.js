@@ -56,7 +56,7 @@ export const home = {
   constellation: {
     tagline: "Historias en movimiento, hechas con luz.", // TODO: EDITAR — frase central de la apertura
     images: [
-      { src: "/images/constellation-01.jpg", alt: "" },
+      { src: "/images/constellation-10.jpg", alt: "" },
       { src: "/images/constellation-02.jpg", alt: "" },
       { src: "/images/constellation-03.jpg", alt: "" },
       { src: "/images/constellation-04.jpg", alt: "" },
@@ -65,7 +65,7 @@ export const home = {
       { src: "/images/constellation-07.jpg", alt: "" },
       { src: "/images/constellation-08.jpg", alt: "" },
       { src: "/images/constellation-09.jpg", alt: "" },
-      { src: "/images/constellation-10.jpg", alt: "" },
+      { src: "/images/constellation-01.jpg", alt: "" },
       { src: "/images/constellation-11.jpg", alt: "" },
       { src: "/images/constellation-12.jpg", alt: "" },
       { src: "/images/constellation-13.jpg", alt: "" },
