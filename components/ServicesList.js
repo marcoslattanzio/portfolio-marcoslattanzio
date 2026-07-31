@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
-import PixelateImage from "@/components/PixelateImage";
+import BlurImage from "@/components/BlurImage";
 
 // Icono "ampliar" (esquinas hacia fuera): señala claramente que abre la foto.
 function ExpandIcon({ className = "" }) {
@@ -153,10 +153,11 @@ export default function ServicesList({ services }) {
               aria-label={`Ampliar imagen de ${service.title}`}
               className="mb-6 block w-full md:hidden"
             >
-              <PixelateImage
+              <BlurImage
                 src={service.image}
                 mode="scroll"
-                intensity={14}
+                intensity={55}
+                duration={1.2}
                 className="relative aspect-[4/3] w-full"
               />
             </button>
@@ -173,11 +174,11 @@ export default function ServicesList({ services }) {
             aria-label="Ampliar imagen"
             className="group/frame relative block aspect-[4/5] w-full overflow-hidden bg-ink/5"
           >
-            <PixelateImage
+            <BlurImage
               src={services[active].image}
               mode="key"
-              intensity={16}
-              duration={0.85}
+              intensity={55}
+              duration={1}
               className="absolute inset-0 h-full w-full transition-transform duration-700 will-change-transform group-hover/frame:scale-[1.03]"
             />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.85),rgba(0,0,0,0.1)_52%)]" />

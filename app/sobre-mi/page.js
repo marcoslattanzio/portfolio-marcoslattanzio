@@ -14,7 +14,7 @@ export default function SobreMiPage() {
       {/* 1 — Declaración de apertura, centrada */}
       <AboutHero
         statement={about.statement}
-        badge={about.portrait}
+        badge={about.badge}
         city={site.city}
         claim={site.claim}
       />

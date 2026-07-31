@@ -26,6 +26,9 @@ const cormorant = Cormorant_Garamond({
 export const metadata = {
   title: `${site.name} — ${site.claim}`,
   description: site.description,
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 // Aplica el tema guardado (o el del sistema) antes del primer pintado,

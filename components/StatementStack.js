@@ -44,6 +44,18 @@ export default function StatementStack({ items }) {
       });
 
       tl.addLabel("slide-0", 0);
+
+      // primer slide: solo zoom out, sin clipPath
+      const firstBg = slides[0].querySelector("[data-slide-bg]");
+      if (firstBg) {
+        tl.fromTo(
+          firstBg,
+          { scale: 1.12 },
+          { scale: 1, duration: 1, ease: "power2.inOut" },
+          0,
+        );
+      }
+
       slides.slice(1).forEach((slide, i) => {
         const bg = slide.querySelector("[data-slide-bg]");
         const title = slide.querySelector("[data-slide-title]");

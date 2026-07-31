@@ -58,7 +58,7 @@ export default function AboutHero({ statement, badge, city, claim }) {
       <h1 className="mx-auto max-w-5xl text-4xl font-light leading-[1.05] tracking-tight md:text-7xl">
         <span
           data-hero-chip
-          className="mr-3 inline-block h-12 w-12 translate-y-1 overflow-hidden rounded-2xl align-middle md:mr-5 md:h-20 md:w-20"
+          className="mr-3 inline-block h-12 w-12 -translate-y-1.5 overflow-hidden rounded-2xl align-middle md:mr-5 md:h-20 md:w-20"
         >
           <img src={badge} alt="" className="h-full w-full object-cover" />
         </span>

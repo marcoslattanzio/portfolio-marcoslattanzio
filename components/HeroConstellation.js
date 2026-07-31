@@ -17,21 +17,21 @@ import TextReveal from "@/components/TextReveal";
 // concentrada en el centro del lienzo (10%–78%), tamaños en un rango estrecho
 // (110–200) para que ninguna foto domine y el conjunto se lea como un todo.
 const LAYOUT = [
-  { left: "12%", top: "12%", w: 205, depth: 0.8 },
-  { left: "28%", top: "8%", w: 170, depth: 0.5 },
+  { left: "12%", top: "10%", w: 205, depth: 0.8 },
+  { left: "28%", top: "9%", w: 170, depth: 0.5 },
   { left: "45%", top: "11%", w: 145, depth: 0.35 },
   { left: "60%", top: "8%", w: 180, depth: 0.6 },
   { left: "74%", top: "12%", w: 205, depth: 0.85 },
-  { left: "6%", top: "32%", w: 240, depth: 1 },
-  { left: "24%", top: "26%", w: 145, depth: 0.3 },
+  { left: "6%", top: "31%", w: 240, depth: 1 },
+  { left: "24%", top: "29%", w: 145, depth: 0.3 },
   { left: "43%", top: "30%", w: 130, depth: 0.25 },
-  { left: "61%", top: "26%", w: 150, depth: 0.35 },
+  { left: "61%", top: "28%", w: 150, depth: 0.35 },
   { left: "78%", top: "32%", w: 240, depth: 1 },
-  { left: "14%", top: "48%", w: 170, depth: 0.55 },
-  { left: "31%", top: "62%", w: 150, depth: 0.4 },
-  { left: "51%", top: "56%", w: 160, depth: 0.45 },
-  { left: "68%", top: "48%", w: 175, depth: 0.55 },
-  { left: "82%", top: "48%", w: 190, depth: 0.7 },
+  { left: "27%", top: "58%", w: 170, depth: 0.55 },
+  { left: "38%", top: "54%", w: 150, depth: 0.4 },
+  { left: "50%", top: "52%", w: 160, depth: 0.45 },
+  { left: "65%", top: "54%", w: 175, depth: 0.55 },
+  { left: "74%", top: "60%", w: 190, depth: 0.7 },
   { left: "8%", top: "66%", w: 200, depth: 0.75 },
   { left: "26%", top: "70%", w: 210, depth: 0.85 },
   { left: "48%", top: "72%", w: 220, depth: 0.9 },
@@ -39,7 +39,27 @@ const LAYOUT = [
   { left: "82%", top: "66%", w: 180, depth: 0.6 },
 ];
 
-export default function HeroConstellation({ tagline, images }) {
+// Móvil: solo se ven las fotos con depth >= 0.5 (9 de las 15). En pantallas
+// estrechas el LAYOUT de escritorio las deja pegadas a los bordes con huecos
+// enormes entre ellas — aquí van posiciones propias, más juntas y centradas.
+// Solo hacen falta entradas para los índices visibles en móvil; el resto
+// copia el valor de escritorio (da igual, quedan ocultas).
+const MOBILE_LAYOUT = LAYOUT.map((slot, i) => {
+  const compact = {
+    0: { left: "6%", top: "5%" },
+    1: { left: "30%", top: "9%" },
+    3: { left: "54%", top: "5%" },
+    4: { left: "72%", top: "17%" },
+    5: { left: "4%", top: "31%" },
+    9: { left: "58%", top: "29%" },
+    10: { left: "14%", top: "64%" },
+    13: { left: "38%", top: "60%" },
+    14: { left: "58%", top: "72%" },
+  };
+  return compact[i] ? { ...slot, ...compact[i] } : slot;
+});
+
+export default function HeroConstellation({ name, role, images }) {
   const sectionRef = useRef(null);
 
   useIsoLayoutEffect(() => {
@@ -223,18 +243,21 @@ export default function HeroConstellation({ tagline, images }) {
       {/* nube de fotos */}
       {images.map((img, i) => {
         const slot = LAYOUT[i % LAYOUT.length];
+        const mobileSlot = MOBILE_LAYOUT[i % MOBILE_LAYOUT.length];
         return (
           <div
             key={img.src + i}
             data-const-item
             data-depth={slot.depth}
             data-opacity={(0.22 + slot.depth * 0.78).toFixed(2)}
-            className={`absolute cursor-grab select-none will-change-transform active:cursor-grabbing ${
+            className={`const-item absolute cursor-grab select-none will-change-transform active:cursor-grabbing ${
               slot.depth < 0.5 ? "hidden md:block" : ""
             }`}
             style={{
-              left: slot.left,
-              top: slot.top,
+              "--m-left": mobileSlot.left,
+              "--m-top": mobileSlot.top,
+              "--d-left": slot.left,
+              "--d-top": slot.top,
               width: `clamp(70px, ${(slot.w / 14.4).toFixed(2)}vw, ${slot.w}px)`,
               opacity: 0.22 + slot.depth * 0.78,
               // las fotos se apilan entre sí por profundidad, pero SIEMPRE
@@ -256,14 +279,20 @@ export default function HeroConstellation({ tagline, images }) {
         );
       })}
 
-      {/* frase central, SIEMPRE por encima de la nube (deja pasar el ratón
-          para poder agarrar las fotos que quedan detrás) */}
-      <div className="pointer-events-none relative z-20 flex h-full items-center justify-center px-5">
+      {/* nombre + rol centrados, SIEMPRE por encima de la nube (deja pasar
+          el ratón para poder agarrar las fotos que quedan detrás) */}
+      <div className="pointer-events-none relative z-20 flex h-full flex-col items-center justify-center px-5 text-center">
         <TextReveal
           as="h1"
-          text={tagline}
-          className="max-w-5xl text-center text-4xl font-light leading-[1.15] tracking-tight md:text-6xl"
+          text={name}
+          className="max-w-5xl text-4xl font-light leading-[1.15] tracking-tight md:text-6xl"
           delay={0.9}
+        />
+        <TextReveal
+          as="p"
+          text={role}
+          className="mt-4 max-w-2xl text-base font-light tracking-tight text-ink/70 md:mt-6 md:text-xl"
+          delay={1.05}
         />
       </div>
     </section>

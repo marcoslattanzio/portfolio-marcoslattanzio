@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
-import PixelateImage from "@/components/PixelateImage";
+import BlurImage from "@/components/BlurImage";
 
 // Retrato vertical enmarcado sobre banda oscura (cinematográfica, siempre
 // oscura para no invertirse con el tema). La imagen escala con un parallax
@@ -53,14 +53,15 @@ export default function PortraitBleed({ image, name, role }) {
   return (
     <section ref={ref} className="bg-cream py-16 md:py-28">
       <div className="mx-auto flex max-w-[1600px] flex-col items-center px-5 md:px-10">
-        <div className="relative w-full max-w-[540px] overflow-hidden">
+        <div className="relative w-full max-w-[540px] overflow-hidden rounded-lg">
           <div data-bleed-img className="will-change-transform">
-            <PixelateImage
+            <BlurImage
               src={image}
               alt={`Retrato de ${name}`}
               mode="scroll"
               intensity={14}
               className="relative aspect-[4/5] w-full"
+              objectPosition="center 75%"
             />
           </div>
           <div

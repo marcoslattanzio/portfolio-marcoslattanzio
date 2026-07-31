@@ -41,12 +41,14 @@ export default function HeroText({ title, subtitle }) {
         className="text-[13vw] font-light leading-[0.95] tracking-tight md:text-[9vw]"
         delay={0.2}
       />
-      <TextReveal
-        as="p"
-        text={subtitle}
-        className="mt-6 max-w-md text-sm font-light leading-relaxed text-ink/80 md:text-base"
-        delay={0.5}
-      />
+      {subtitle && (
+        <TextReveal
+          as="p"
+          text={subtitle}
+          className="mt-6 max-w-md text-sm font-light leading-relaxed text-ink/80 md:text-base"
+          delay={0.5}
+        />
+      )}
     </div>
   );
 }

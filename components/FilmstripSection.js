@@ -115,6 +115,10 @@ export default function FilmstripSection({ title, images }) {
                 src={img.src}
                 alt={img.alt}
                 className={`${HEIGHTS[i % HEIGHTS.length]} w-auto object-cover`}
+                style={{
+                  aspectRatio: img.aspect,
+                  objectPosition: img.objectPosition || 'center'
+                }}
               />
               <figcaption className="mt-3 text-xs font-light text-muted">
                 ({String(i + 1).padStart(2, "0")})

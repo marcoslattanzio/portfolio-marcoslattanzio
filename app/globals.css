@@ -187,6 +187,21 @@ html.lenis body {
 }
 
 /* ---------------------------------------------------------------------------
+   Constelación del hero — cada foto trae su posición de escritorio (--d-*) y
+   una de móvil (--m-*) más compacta; el breakpoint decide cuál se usa.
+--------------------------------------------------------------------------- */
+.const-item {
+  left: var(--m-left);
+  top: var(--m-top);
+}
+@media (min-width: 768px) {
+  .const-item {
+    left: var(--d-left);
+    top: var(--d-top);
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Accesibilidad: reduce motion — corta todas las animaciones CSS
 --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {

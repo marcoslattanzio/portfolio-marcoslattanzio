@@ -19,7 +19,8 @@ export default function HomePage() {
     <>
       {/* APERTURA: constelación de fotos flotando alrededor de la frase */}
       <HeroConstellation
-        tagline={home.constellation.tagline}
+        name={home.constellation.name}
+        role={home.constellation.role}
         images={home.constellation.images}
       />
 
