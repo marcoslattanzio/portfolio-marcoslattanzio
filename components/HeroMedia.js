@@ -49,7 +49,7 @@ export default function HeroMedia({ video, image, className = "" }) {
   }, []);
 
   const mediaClass =
-    "absolute left-0 top-0 h-[115%] w-full object-cover will-change-transform";
+    "absolute left-0 top-0 h-full w-full object-cover will-change-transform";
 
   return (
     <div ref={wrapRef} className={`overflow-hidden ${className}`}>
