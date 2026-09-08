@@ -4,7 +4,7 @@ import ContactForm from "@/components/ContactForm";
 
 export const metadata = { title: "Contacto" };
 
-// fila de la ficha: etiqueta pequeña a la izquierda, valor grande a la derecha
+// fila de contacto: etiqueta pequeña a la izquierda, valor grande a la derecha
 function Row({ label, children }) {
   return (
     <div className="grid items-baseline gap-2 border-t border-line py-7 md:grid-cols-12 md:py-10">

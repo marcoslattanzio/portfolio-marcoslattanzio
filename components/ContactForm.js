@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import TimePicker from "@/components/TimePicker";
 
 // Formulario maquetado sin backend, con estados de focus elegantes y un
 // calendario para proponer día de llamada (opcional). El calendario es
 // funcional: navega por meses y guarda el día elegido; los días pasados
-// quedan deshabilitados.
+// quedan deshabilitados. También incluye selector de hora con rueda vertical.
 
 const MONTHS = [
   "Enero",
@@ -114,6 +115,7 @@ function Calendar({ selected, onSelect }) {
 export default function ContactForm() {
   const [sent, setSent] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
   // el calendario depende de la fecha ACTUAL: si se prerenderiza en el build
   // con otro mes, la hidratación no cuadra y puede tirar la página al recargar.
   // Se monta solo en cliente.
@@ -124,11 +126,14 @@ export default function ContactForm() {
     return (
       <div className="border-t border-line py-16">
         <p className="text-2xl font-light">
-          Gracias — este formulario es solo maqueta.
+          Gracias - este formulario es solo maqueta.
         </p>
         {selected && (
           <p className="mt-3 text-base font-light">
             Día propuesto: <span className="text-accent">{formatDate(selected)}</span>
+            {selectedTime && (
+              <> a las <span className="text-accent">{String(selectedTime.hour).padStart(2, "0")}:{String(selectedTime.minute).padStart(2, "0")}</span></>
+            )}
           </p>
         )}
         <p className="mt-3 text-sm text-muted">
@@ -180,7 +185,12 @@ export default function ContactForm() {
             ¿Te viene bien un día para una llamada? (opcional)
           </p>
           {mounted ? (
-            <Calendar selected={selected} onSelect={setSelected} />
+            <>
+              <Calendar selected={selected} onSelect={setSelected} />
+              {selected && (
+                <TimePicker selected={selectedTime} onSelect={setSelectedTime} />
+              )}
+            </>
           ) : (
             <div className="border-t border-line pt-5 text-sm font-light text-muted">
               Cargando calendario…
@@ -188,7 +198,7 @@ export default function ContactForm() {
           )}
           <p className="mt-4 min-h-5 text-sm font-light text-muted">
             {selected
-              ? `Día propuesto: ${formatDate(selected)} — vuelve a pulsarlo para quitarlo`
+              ? `Día propuesto: ${formatDate(selected)} - vuelve a pulsarlo para quitarlo`
               : "Elige un día en el calendario si quieres proponer una llamada"}
           </p>
         </div>
