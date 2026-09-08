@@ -240,8 +240,9 @@ export default function HeroConstellation({ name, role, images }) {
       ref={sectionRef}
       className="relative h-svh w-full overflow-hidden"
     >
-      {/* nube de fotos */}
-      {images.map((img, i) => {
+      {/* nube de fotos — solo en desktop */}
+      <div className="hidden md:block">
+        {images.map((img, i) => {
         const slot = LAYOUT[i % LAYOUT.length];
         const mobileSlot = MOBILE_LAYOUT[i % MOBILE_LAYOUT.length];
         return (
@@ -278,6 +279,7 @@ export default function HeroConstellation({ name, role, images }) {
           </div>
         );
       })}
+      </div>
 
       {/* nombre + rol centrados, SIEMPRE por encima de la nube (deja pasar
           el ratón para poder agarrar las fotos que quedan detrás) */}
