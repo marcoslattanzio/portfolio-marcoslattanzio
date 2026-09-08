@@ -10,7 +10,7 @@ export const metadata = { title: "Sobre mí" };
 
 export default function SobreMiPage() {
   return (
-    <div className="overflow-hidden bg-cream pb-28 md:pb-44">
+    <div className="overflow-hidden bg-gradient-to-br from-cream to-emerald-50/30 pb-28 md:pb-44">
       {/* 1 — Declaración de apertura, centrada */}
       <AboutHero
         statement={about.statement}
