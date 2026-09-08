@@ -51,7 +51,7 @@ export default function PortraitBleed({ image, name, role }) {
   }, []);
 
   return (
-    <section ref={ref} className="bg-gradient-to-br from-cream to-emerald-50/30 py-16 md:py-28">
+    <section ref={ref} className="py-16 md:py-28">
       <div className="mx-auto flex max-w-[1600px] flex-col items-center px-5 md:px-10">
         <div className="relative w-full max-w-[540px] overflow-hidden rounded-lg">
           <div data-bleed-img className="will-change-transform">
