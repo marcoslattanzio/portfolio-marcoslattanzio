@@ -18,8 +18,7 @@ function Row({ label, children }) {
 
 export default function ContactoPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream to-emerald-50/50">
-      <div className="mx-auto max-w-[1600px] px-5 pb-28 pt-36 md:px-10 md:pb-44 md:pt-48">
+    <div className="mx-auto max-w-[1600px] px-5 pb-28 pt-36 md:px-10 md:pb-44 md:pt-48">
       <p className="mb-4 text-xs uppercase tracking-[0.18em] text-muted">
         Contacto
       </p>
@@ -92,7 +91,6 @@ export default function ContactoPage() {
           className="mb-12 text-3xl font-light leading-tight tracking-tight md:mb-16 md:text-5xl"
         />
         <ContactForm />
-      </div>
       </div>
     </div>
   );
