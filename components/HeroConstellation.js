@@ -236,12 +236,9 @@ export default function HeroConstellation({ name, role, images }) {
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative h-svh w-full overflow-hidden"
-    >
-      {/* nube de fotos — solo en desktop */}
-      <div className="hidden md:block">
+    <section ref={sectionRef} className="w-full">
+      {/* DESKTOP: constelación flotante (h-svh) */}
+      <div className="relative hidden h-svh w-full overflow-hidden md:block">
         {images.map((img, i) => {
         const slot = LAYOUT[i % LAYOUT.length];
         const mobileSlot = MOBILE_LAYOUT[i % MOBILE_LAYOUT.length];
@@ -279,23 +276,54 @@ export default function HeroConstellation({ name, role, images }) {
           </div>
         );
       })}
+
+        {/* nombre + rol centrados */}
+        <div className="pointer-events-none relative z-20 flex h-full flex-col items-center justify-center px-5 text-center">
+          <TextReveal
+            as="h1"
+            text={name}
+            className="max-w-5xl text-4xl font-light leading-[1.15] tracking-tight md:text-6xl"
+            delay={0.9}
+          />
+          <TextReveal
+            as="p"
+            text={role}
+            className="mt-4 max-w-2xl text-base font-light tracking-tight text-ink/70 md:mt-6 md:text-xl"
+            delay={1.05}
+          />
+        </div>
       </div>
 
-      {/* nombre + rol centrados, SIEMPRE por encima de la nube (deja pasar
-          el ratón para poder agarrar las fotos que quedan detrás) */}
-      <div className="pointer-events-none relative z-20 flex h-full flex-col items-center justify-center px-5 text-center">
-        <TextReveal
-          as="h1"
-          text={name}
-          className="max-w-5xl text-4xl font-light leading-[1.15] tracking-tight md:text-6xl"
-          delay={0.9}
-        />
-        <TextReveal
-          as="p"
-          text={role}
-          className="mt-4 max-w-2xl text-base font-light tracking-tight text-ink/70 md:mt-6 md:text-xl"
-          delay={1.05}
-        />
+      {/* MOBILE: cuadrícula simple de fotos + nombre y claim */}
+      <div className="flex flex-col md:hidden">
+        {/* nombre + rol */}
+        <div className="flex h-48 flex-col items-center justify-center px-5 text-center">
+          <TextReveal
+            as="h1"
+            text={name}
+            className="max-w-5xl text-3xl font-light leading-[1.15] tracking-tight"
+            delay={0.9}
+          />
+          <TextReveal
+            as="p"
+            text={role}
+            className="mt-3 max-w-2xl text-sm font-light tracking-tight text-ink/70"
+            delay={1.05}
+          />
+        </div>
+
+        {/* cuadrícula 2 columnas */}
+        <div className="grid grid-cols-2 gap-3 px-5 pb-8">
+          {images.map((img, i) => (
+            <div key={img.src + i} className="aspect-square overflow-hidden rounded-sm">
+              <img
+                src={img.src}
+                alt={img.alt}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
