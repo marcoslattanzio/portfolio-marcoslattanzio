@@ -40,8 +40,8 @@ export default function TimePicker({ selected, onSelect }) {
               selected &&
               selected.hour === slot.hour &&
               selected.minute === slot.minute
-                ? "bg-accent text-black border-accent shadow-lg shadow-accent/30"
-                : "bg-white/10 hover:bg-white/20 text-cream border-white/20 hover:border-white/40"
+                ? "bg-accent text-black border-accent shadow-lg shadow-accent/50"
+                : "bg-white/20 hover:bg-white/30 text-cream border-white/40 hover:border-white/60 hover:shadow-lg hover:shadow-white/10"
             }`}
           >
             {formatTime(slot.hour, slot.minute)}
