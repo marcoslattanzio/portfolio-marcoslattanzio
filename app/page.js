@@ -37,13 +37,13 @@ export default function HomePage() {
 
       {/* COLLAGE flotante con parallax */}
       <section className="mx-auto max-w-[1600px] px-5 py-28 md:px-10 md:py-44">
-        <p className="mb-4 text-xs uppercase tracking-[0.18em] text-muted">
+        <p className="mb-4 hidden text-xs uppercase tracking-[0.18em] text-muted md:block">
           {home.collage.eyebrow}
         </p>
         <TextReveal
           as="h2"
           text={home.collage.title}
-          className="mb-16 max-w-3xl text-3xl font-light leading-[1.15] tracking-tight md:mb-28 md:text-5xl"
+          className="mb-16 hidden max-w-3xl text-3xl font-light leading-[1.15] tracking-tight md:mb-28 md:block md:text-5xl"
         />
         <Collage images={home.collage.images} />
       </section>
