@@ -25,7 +25,7 @@ export default function HomePage() {
       />
 
       {/* VÍDEO a pantalla completa con el nombre */}
-      <section className="relative h-screen md:h-svh w-full">
+      <section className="relative h-auto md:h-svh w-full" style={{ aspectRatio: "16/9" }}>
         <HeroMedia
           video={home.hero.video}
           image={home.hero.image}
