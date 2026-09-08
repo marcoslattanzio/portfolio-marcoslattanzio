@@ -21,19 +21,24 @@ export default function Collage({ images }) {
   useIsoLayoutEffect(() => {
     if (prefersReducedMotion()) return;
     const container = ref.current;
+    if (!container) return;
 
     const ctx = gsap.context(() => {
-      container.querySelectorAll("[data-speed]").forEach((el) => {
-        const speed = parseFloat(el.dataset.speed) || 1;
-        gsap.to(el, {
-          y: () => speed * -110,
-          ease: "none",
-          scrollTrigger: {
-            trigger: container,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
+      const mq = gsap.matchMedia();
+
+      mq.add("(min-width: 768px)", () => {
+        container.querySelectorAll("[data-speed]").forEach((el) => {
+          const speed = parseFloat(el.dataset.speed) || 1;
+          gsap.to(el, {
+            y: () => speed * -110,
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
         });
       });
     }, container);
@@ -42,16 +47,42 @@ export default function Collage({ images }) {
   }, []);
 
   return (
-    <div ref={ref} className="grid grid-cols-12 gap-x-4 md:gap-x-6">
-      {images.map((img, i) => (
-        <div
-          key={img.src + i}
-          data-speed={img.speed}
-          className={`${LAYOUT[i % LAYOUT.length]} will-change-transform`}
-        >
-          <ImageReveal src={img.src} alt={img.alt} className="h-full w-full" />
+    <>
+      {/* Desktop: grid asimétrico con parallax */}
+      <div ref={ref} className="hidden grid-cols-12 gap-x-4 md:grid md:gap-x-6">
+        {images.map((img, i) => (
+          <div
+            key={img.src + i}
+            data-speed={img.speed}
+            className={`${LAYOUT[i % LAYOUT.length]} will-change-transform`}
+          >
+            <ImageReveal src={img.src} alt={img.alt} className="h-full w-full" />
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile: cuadrícula con scroll horizontal */}
+      <div className="md:hidden -mx-5 overflow-x-auto px-5 pb-4">
+        <div style={{
+          display: 'flex',
+          flexWrap: 'nowrap',
+          gap: '12px',
+          width: `calc(${images.length} * 160px + ${Math.max(0, images.length - 1)} * 12px)`
+        }}>
+          {images.map((img, i) => (
+            <div
+              key={img.src + i}
+              style={{
+                flex: '0 0 160px',
+                aspectRatio: '3/4',
+                overflow: 'hidden'
+              }}
+            >
+              <ImageReveal src={img.src} alt={img.alt} className="h-full w-full" />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </>
   );
 }
