@@ -1,26 +1,5 @@
 [
   {
-    "slug": "prueba-1",
-    "title": "Prueba 1",
-    "year": "2026",
-    "category": "film",
-    "client": "Marco",
-    "description": "sdcghjsdBHJICSDBPIJUCSDB AU'IPCSDSD ",
-    "sections": [
-      {
-        "heading": "El encargo",
-        "text": "CDSACSAd asDas okd haSDQas\ndasD\nASd\nasd\nsad\nasd\nasd\nasqdqiwjhvdbqi"
-      },
-      {
-        "heading": "El enfoque",
-        "text": "cADASDASdhasDHASJD ASDASD\nD\nAS\nDAS\nDAS\nD\nASD\nASD\nAS\nDAS\nDA"
-      }
-    ],
-    "cover": "/images/proyectos/prueba-1/portada-1gozbz.jpg",
-    "videoUrl": "https://www.youtube.com/watch?v=2BlL8bmPr20",
-    "gallery": []
-  },
-  {
     "slug": "proyecto-01",
     "title": "Proyecto Uno",
     "year": "2025",
@@ -217,5 +196,26 @@
       "https://picsum.photos/seed/ribera/1800/1200",
       "https://picsum.photos/seed/sauce/2000/1250"
     ]
+  },
+  {
+    "slug": "prueba-1",
+    "title": "Prueba 1",
+    "year": "2026",
+    "category": "film",
+    "client": "Marco",
+    "description": "sdcghjsdBHJICSDBPIJUCSDB AU'IPCSDSD ",
+    "sections": [
+      {
+        "heading": "El encargo",
+        "text": "CDSACSAd asDas okd haSDQas\ndasD\nASd\nasd\nsad\nasd\nasd\nasqdqiwjhvdbqi"
+      },
+      {
+        "heading": "El enfoque",
+        "text": "cADASDASdhasDHASJD ASDASD\nD\nAS\nDAS\nDAS\nD\nASD\nASD\nAS\nDAS\nDA"
+      }
+    ],
+    "cover": "/images/proyectos/prueba-1/portada-1gozbz.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=2BlL8bmPr20",
+    "gallery": []
   }
 ]
