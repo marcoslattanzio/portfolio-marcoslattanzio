@@ -230,12 +230,6 @@ export const home = {
       }
     ]
   },
-  "featuredSlugs": [
-    "proyecto-01",
-    "proyecto-02",
-    "proyecto-03",
-    "proyecto-04"
-  ],
   "aboutTeaser": {
     "eyebrow": "(03) — Sobre mí",
     "text": "Cuento historias con cámara desde hace más de una década. Trabajo entre el documental, la moda y la publicidad, buscando siempre la imagen que respira.",

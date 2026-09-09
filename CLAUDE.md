@@ -173,6 +173,11 @@ just opens in dev without asking.
 `/admin` is a content panel for adding, editing, reordering and deleting
 projects without touching code.
 
+- The **Proyecto destacado** field (0 = no, 1–4 = slot) drives the "Proyectos
+  destacados" section on the home page, ordered by slot. Assigning a slot that
+  another project holds takes it away from that one, so a slot never has two
+  projects. This replaced `home.featuredSlugs`, a fixed list in `content.js`
+  the panel never wrote — which meant the same four forever.
 - Photos are resized to 2400px and recompressed in the browser before upload,
   so the repo doesn't bloat (git keeps every version forever).
 - Videos are Vimeo/YouTube links, not uploads.

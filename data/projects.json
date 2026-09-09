@@ -36,6 +36,7 @@
     "title": "Proyecto Uno",
     "year": "2025",
     "category": "film",
+    "featured": 1,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado. Dos o tres frases que den contexto sin desvelarlo todo.",
     "sections": [
@@ -61,6 +62,7 @@
     "title": "Proyecto Dos",
     "year": "2025",
     "category": "foto",
+    "featured": 2,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado.",
     "sections": [
@@ -87,6 +89,7 @@
     "title": "Proyecto Tres",
     "year": "2024",
     "category": "film",
+    "featured": 3,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado.",
     "sections": [
@@ -112,6 +115,7 @@
     "title": "Proyecto Cuatro",
     "year": "2024",
     "category": "foto",
+    "featured": 4,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado.",
     "sections": [
@@ -136,6 +140,7 @@
     "title": "Proyecto Cinco",
     "year": "2024",
     "category": "film",
+    "featured": 0,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado.",
     "sections": [
@@ -161,6 +166,7 @@
     "title": "Proyecto Seis",
     "year": "2023",
     "category": "foto",
+    "featured": 0,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado.",
     "sections": [
@@ -185,6 +191,7 @@
     "title": "Proyecto Siete",
     "year": "2023",
     "category": "film",
+    "featured": 0,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado.",
     "sections": [
@@ -210,6 +217,7 @@
     "title": "Proyecto Ocho",
     "year": "2022",
     "category": "foto",
+    "featured": 0,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado.",
     "sections": [
@@ -234,6 +242,7 @@
     "title": "Prueba 1",
     "year": "2026",
     "category": "film",
+    "featured": 0,
     "client": "Marco",
     "description": "sdcghjsdBHJICSDBPIJUCSDB AU'IPCSDSD ",
     "sections": [

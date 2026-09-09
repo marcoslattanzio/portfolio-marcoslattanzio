@@ -25,6 +25,7 @@ const emptyProject = () => ({
   title: "",
   year: String(new Date().getFullYear()),
   category: REAL_CATEGORIES[0]?.id || "film",
+  featured: 0, // 0 = no sale en la portada; 1..4 = puesto que ocupa
   client: "",
   description: "",
   sections: [
@@ -289,6 +290,23 @@ function ProjectEditor({ project, taken, onSave, onCancel }) {
           </Field>
         </div>
       </div>
+
+      <Field
+        label="Proyecto destacado"
+        hint="Los destacados son los cuatro que salen en la portada, en el orden que elijas aquí. Si eliges una posición que ya ocupa otro proyecto, ese otro deja de estar destacado."
+      >
+        <select
+          className={inputCls}
+          value={draft.featured || 0}
+          onChange={(e) => set({ featured: Number(e.target.value) })}
+        >
+          <option value={0}>No</option>
+          <option value={1}>Sí — posición 1</option>
+          <option value={2}>Sí — posición 2</option>
+          <option value={3}>Sí — posición 3</option>
+          <option value={4}>Sí — posición 4</option>
+        </select>
+      </Field>
 
       <Field label="Descripción">
         <textarea
@@ -640,11 +658,23 @@ export default function AdminPanel() {
           taken={taken}
           onCancel={() => setEditing(null)}
           onSave={(project) => {
-            setList((prev) =>
-              editing.index === -1
-                ? [project, ...prev]
-                : prev.map((p, i) => (i === editing.index ? project : p)),
-            );
+            setList((prev) => {
+              const next =
+                editing.index === -1
+                  ? [project, ...prev]
+                  : prev.map((p, i) => (i === editing.index ? project : p));
+              // Cada puesto de la portada es de un solo proyecto: si este se
+              // queda con el 2, el que lo tenía antes pasa a no destacado. Sin
+              // esto habría dos proyectos peleando por el mismo hueco.
+              if (project.featured > 0) {
+                return next.map((p) =>
+                  p.slug !== project.slug && p.featured === project.featured
+                    ? { ...p, featured: 0 }
+                    : p,
+                );
+              }
+              return next;
+            });
             setDirty(true);
             setEditing(null);
             setDone("");
@@ -655,6 +685,8 @@ export default function AdminPanel() {
   }
 
   /* --------------------------------------------------------------- lista */
+  const destacados = list.filter((p) => p.featured > 0);
+
   const move = (index, delta) => {
     const next = [...list];
     const target = index + delta;
@@ -673,6 +705,15 @@ export default function AdminPanel() {
           </h1>
           <p className="mt-2 text-sm font-light text-muted">
             {list.length} publicados · el orden aquí es el de la web
+          </p>
+          <p className="mt-1 text-sm font-light text-muted">
+            {destacados.length} de 4 posiciones destacadas ocupadas
+            {destacados.length < 4 && (
+              <span className="text-accent">
+                {" "}
+                · la portada mostrará solo {destacados.length}
+              </span>
+            )}
           </p>
         </div>
         <button
@@ -701,11 +742,21 @@ export default function AdminPanel() {
             key={project.slug}
             className="flex items-center gap-4 rounded-xl border border-line bg-ink/[0.02] p-3 transition-colors duration-200 hover:border-accent/40"
           >
-            <img
-              src={project._cover?.preview || project.cover}
-              alt=""
-              className="h-14 w-14 shrink-0 rounded-lg object-cover"
-            />
+            <div className="relative shrink-0">
+              <img
+                src={project._cover?.preview || project.cover}
+                alt=""
+                className="h-14 w-14 rounded-lg object-cover"
+              />
+              {project.featured > 0 && (
+                <span
+                  title={`Destacado en la portada, posición ${project.featured}`}
+                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[0.65rem] font-medium text-black"
+                >
+                  {project.featured}
+                </span>
+              )}
+            </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm">{project.title}</p>
               <p className="truncate text-xs text-muted">

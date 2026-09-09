@@ -11,9 +11,12 @@ import StatementStack from "@/components/StatementStack";
 import FilmstripSection from "@/components/FilmstripSection";
 
 export default function HomePage() {
-  const featured = home.featuredSlugs
-    .map((slug) => projects.find((p) => p.slug === slug))
-    .filter(Boolean);
+  // Cada proyecto lleva su puesto en la portada (0 = no destacado). Antes esto
+  // era una lista fija en content.js, que el panel de /admin no toca: para
+  // rotarlos había que editar el código.
+  const featured = projects
+    .filter((p) => p.featured > 0)
+    .sort((a, b) => a.featured - b.featured);
 
   return (
     <>
