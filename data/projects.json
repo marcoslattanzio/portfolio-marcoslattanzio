@@ -1,5 +1,37 @@
 [
   {
+    "slug": "hola-marco",
+    "title": "Hola Marco",
+    "year": "2026",
+    "category": "film",
+    "client": "Marco Garcia Marica",
+    "description": "Buenas que tal esto es una prueba de a ver si eres tonto",
+    "sections": [
+      {
+        "heading": "El encargo",
+        "text": "Buenas pues aqui hicimos de todo un pooco y nos divertimos mucho shhshdwhsjdhasjdhsajdhasjdhs"
+      },
+      {
+        "heading": "El enfoque",
+        "text": "Buenas pues aqui hicimos de todo un pooco y nos divertimos mucho shhshdwhsjdhasjdhsajdhasjdhs"
+      },
+      {
+        "heading": "El enfoque2",
+        "text": "Buenas pues aqui hicimos de todo un pooco y nos divertimos mucho shhshdwhsjdhasjdhsajdhasjdhs"
+      },
+      {
+        "heading": "wdsadasdas",
+        "text": "Buenas pues aqui hicimos de todo un pooco y nos divertimos mucho shhshdwhsjdhasjdhsajdhasjdhs"
+      }
+    ],
+    "cover": "/images/proyectos/hola-marco/portada-wr7w35.jpg",
+    "videoUrl": "https://www.youtube.com/watch?v=_WG-kBrRmfE",
+    "gallery": [
+      "/images/proyectos/hola-marco/foto-h1p4st.jpg",
+      "/images/proyectos/hola-marco/foto-ihnpui.jpg"
+    ]
+  },
+  {
     "slug": "proyecto-01",
     "title": "Proyecto Uno",
     "year": "2025",
