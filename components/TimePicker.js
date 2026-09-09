@@ -1,59 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
+import { gsap } from "@/lib/gsap";
+import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
 
-function generateTimeSlots() {
-  const slots = [];
-  for (let hour = 8; hour <= 20; hour++) {
-    slots.push({ hour, minute: 0 });
-    if (hour < 20) {
-      slots.push({ hour, minute: 30 });
-    }
+// Rejilla de horas de 8:00 a 20:00 en tramos de 30 min. Las horas en punto se
+// escriben sin minutos (8, 9, 10…) y las medias con ellos (8:30, 9:30…).
+
+const SLOTS = (() => {
+  const out = [];
+  for (let h = 8; h <= 20; h++) {
+    out.push({ hour: h, minute: 0 });
+    if (h < 20) out.push({ hour: h, minute: 30 });
   }
-  return slots;
+  return out;
+})();
+
+export function formatSlot(hour, minute) {
+  return minute === 0 ? `${hour}` : `${hour}:${String(minute).padStart(2, "0")}`;
 }
 
-function formatTime(hour, minute) {
-  if (minute === 0) {
-    return `${hour}`;
-  }
-  return `${hour}:${String(minute).padStart(2, "0")}`;
+export function formatClock(hour, minute) {
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 }
 
 export default function TimePicker({ selected, onSelect }) {
-  const slots = generateTimeSlots();
+  const rootRef = useRef(null);
 
-  const handleTimeSelect = (slot) => {
-    onSelect(slot);
-  };
+  // entrada escalonada: las horas caen en cascada al abrirse el bloque
+  useIsoLayoutEffect(() => {
+    if (prefersReducedMotion()) return;
+    const chips = rootRef.current?.querySelectorAll("[data-slot]");
+    if (!chips?.length) return;
+
+    const tw = gsap.fromTo(
+      chips,
+      { opacity: 0, y: 10, scale: 0.9 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.45,
+        ease: "power3.out",
+        stagger: 0.016,
+        clearProps: "transform,opacity",
+      },
+    );
+    return () => tw.kill();
+  }, []);
 
   return (
-    <div className="border-t border-line pt-5">
-      <p className="mb-4 text-sm font-light text-muted">Hora de la llamada</p>
-
-      <div className="grid grid-cols-4 gap-2 md:gap-3">
-        {slots.map((slot) => (
-          <button
-            key={`${slot.hour}-${slot.minute}`}
-            onClick={() => handleTimeSelect(slot)}
-            className={`py-3 px-2 md:py-4 md:px-3 text-sm md:text-base font-light rounded-lg transition-all duration-200 backdrop-blur-md border ${
-              selected &&
-              selected.hour === slot.hour &&
-              selected.minute === slot.minute
-                ? "bg-accent text-black border-accent shadow-lg shadow-accent/50"
-                : "bg-white/20 hover:bg-white/30 text-cream border-white/40 hover:border-white/60 hover:shadow-lg hover:shadow-white/10"
-            }`}
-          >
-            {formatTime(slot.hour, slot.minute)}
-          </button>
-        ))}
-      </div>
-
-      <p className="mt-4 min-h-5 text-sm font-light text-muted">
-        {selected
-          ? `Hora propuesta: ${formatTime(selected.hour, selected.minute)}`
-          : "Selecciona una hora"}
+    <div ref={rootRef}>
+      <p className="mb-3 text-[0.65rem] uppercase tracking-[0.22em] text-muted">
+        Hora
       </p>
+
+      <div className="grid grid-cols-4 gap-1.5 md:gap-2">
+        {SLOTS.map((slot) => {
+          const isSel =
+            !!selected &&
+            selected.hour === slot.hour &&
+            selected.minute === slot.minute;
+
+          return (
+            <button
+              key={`${slot.hour}-${slot.minute}`}
+              data-slot
+              type="button"
+              aria-pressed={isSel}
+              aria-label={`Las ${formatClock(slot.hour, slot.minute)}`}
+              onClick={() => onSelect(isSel ? null : slot)}
+              className={`group relative overflow-hidden rounded-xl border py-2.5 text-sm font-light backdrop-blur-md transition-colors duration-300 md:py-3 ${
+                isSel
+                  ? "border-accent"
+                  : "border-line bg-ink/[0.03] hover:border-accent/50"
+              }`}
+            >
+              {/* relleno "líquido": crece desde el centro al seleccionar */}
+              <span
+                aria-hidden
+                className={`absolute inset-0 bg-accent transition-transform duration-500 [transition-timing-function:cubic-bezier(.34,1.56,.64,1)] ${
+                  isSel ? "scale-100" : "scale-0"
+                }`}
+              />
+              <span
+                className={`relative z-10 transition-colors duration-300 ${
+                  isSel ? "text-black" : "text-ink group-hover:text-accent"
+                }`}
+              >
+                {formatSlot(slot.hour, slot.minute)}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
