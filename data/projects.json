@@ -4,7 +4,7 @@
     "title": "Hola Marco",
     "year": "2026",
     "category": "film",
-    "featured": 0,
+    "featured": 1,
     "client": "Marco Garcia Marica",
     "description": "Buenas que tal esto es una prueba de a ver si eres tonto",
     "sections": [
@@ -37,7 +37,7 @@
     "title": "Proyecto Uno",
     "year": "2025",
     "category": "film",
-    "featured": 1,
+    "featured": 0,
     "client": "Cliente / Marca",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado. Dos o tres frases que den contexto sin desvelarlo todo.",
     "sections": [
