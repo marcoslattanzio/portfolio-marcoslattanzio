@@ -202,6 +202,36 @@ html.lenis body {
 }
 
 /* ---------------------------------------------------------------------------
+   Desplegables del panel de /admin
+
+   La lista que se abre la dibuja el sistema operativo, no la página, y toma
+   los colores del propio <select>. Con un fondo translúcido (el tinte sutil
+   del resto de campos) Windows lo resuelve a blanco, mientras el texto sigue
+   heredando el color claro del tema oscuro: opciones blancas sobre blanco.
+   Por eso aquí los colores son opacos y las <option> llevan los suyos
+   explícitos. El tinte se conserva mezclando en vez de bajando la opacidad.
+
+   Se mantiene el <select> nativo a propósito: en el móvil abre el selector
+   del sistema, y el teclado y los lectores de pantalla funcionan solos.
+--------------------------------------------------------------------------- */
+.field-select {
+  appearance: none;
+  background-color: var(--color-cream); /* reserva si falta color-mix */
+  background-color: color-mix(in srgb, var(--color-ink) 3%, var(--color-cream));
+  /* flecha propia, en un gris que se lee en ambos temas */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%238a8984' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 0.7rem;
+  padding-right: 2.4rem;
+  cursor: pointer;
+}
+.field-select option {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------------------
    Accesibilidad: reduce motion — corta todas las animaciones CSS
 --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {

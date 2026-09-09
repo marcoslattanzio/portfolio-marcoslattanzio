@@ -56,6 +56,11 @@ function Field({ label, hint, children }) {
 const inputCls =
   "w-full rounded-lg border border-line bg-ink/[0.03] px-3.5 py-2.5 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-muted focus:border-accent";
 
+// field-select (en globals.css) da a los desplegables un fondo opaco y colores
+// propios en las opciones: el sistema pinta esa lista y con el tinte
+// translúcido del resto de campos salía texto claro sobre blanco.
+const selectCls = `${inputCls} field-select`;
+
 function Dropzone({ multiple, onFiles, label }) {
   const [over, setOver] = useState(false);
   const inputRef = useRef(null);
@@ -277,7 +282,7 @@ function ProjectEditor({ project, taken, onSave, onCancel }) {
           </Field>
           <Field label="Categoría">
             <select
-              className={inputCls}
+              className={selectCls}
               value={draft.category}
               onChange={(e) => set({ category: e.target.value })}
             >
@@ -296,7 +301,7 @@ function ProjectEditor({ project, taken, onSave, onCancel }) {
         hint="Los destacados son los cuatro que salen en la portada, en el orden que elijas aquí. Si eliges una posición que ya ocupa otro proyecto, ese otro deja de estar destacado."
       >
         <select
-          className={inputCls}
+          className={selectCls}
           value={draft.featured || 0}
           onChange={(e) => set({ featured: Number(e.target.value) })}
         >
