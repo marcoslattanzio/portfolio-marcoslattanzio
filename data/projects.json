@@ -4,6 +4,7 @@
     "title": "Hola Marco",
     "year": "2026",
     "category": "film",
+    "featured": 0,
     "client": "Marco Garcia Marica",
     "description": "Buenas que tal esto es una prueba de a ver si eres tonto",
     "sections": [
