@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Exportación estática: `npm run build` genera la carpeta /out con HTML, CSS
-  // y JS planos, listos para subir a un hosting normal (Hostinger, etc.).
-  // La web no usa servidor (ni API, ni next/image), así que no pierde nada.
-  output: "export",
-
-  // Cada ruta se sirve como carpeta con su index.html (/proyectos/index.html),
-  // que es como esperan las URLs los hostings de archivos estáticos.
+  // Antes esto era `output: "export"` (HTML plano en /out para un hosting de
+  // archivos como Hostinger). Se quitó al proteger /admin: el filtro de
+  // usuario y contraseña vive en middleware.js, y el middleware necesita que
+  // haya un servidor delante — con un export estático no se ejecuta nada y la
+  // contraseña tendría que ir en el JavaScript del navegador, donde cualquiera
+  // la leería. En Vercel esto no cambia nada: las páginas se siguen generando
+  // en el build; lo único que se pierde es la carpeta /out portátil.
   trailingSlash: true,
 };
 

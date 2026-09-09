@@ -144,13 +144,47 @@ To sync from another device:
 git pull
 ```
 
-## 🌐 Deployment (Future)
+## 🌐 Deployment
 
-Once ready to go live, options:
-- **Vercel** (recommended for Next.js) — auto-deploys on git push
-- **Hostinger** (current option) — build & upload `out/` folder
+Live on **Vercel**, auto-deploying on every push to `main`.
 
-For Vercel: Connect repo, Vercel auto-detects Next.js and deploys.
+The site used to be a static export (`output: "export"` → an `out/` folder you
+could drop on any file host like Hostinger). That was dropped when `/admin` got
+password-protected: the check lives in `proxy.js` and needs a server in front of
+it. Static hosting is no longer an option unless that protection goes away.
+
+### Required environment variables
+
+Set in **Vercel → Settings → Environment Variables** (see `.env.example`):
+
+| Variable | What it is |
+|---|---|
+| `ADMIN_USER` | Username for `/admin` |
+| `ADMIN_PASSWORD` | Password for `/admin` |
+
+Without them `/admin` returns 503 — it fails closed on purpose, so forgetting to
+configure them locks you out rather than leaving the panel open.
+
+For local work, copy `.env.example` to `.env.local`. If you skip it, `/admin`
+just opens in dev without asking.
+
+## 📤 Publishing projects (/admin)
+
+`/admin` is a content panel for adding, editing, reordering and deleting
+projects without touching code.
+
+- Photos are resized to 2400px and recompressed in the browser before upload,
+  so the repo doesn't bloat (git keeps every version forever).
+- Videos are Vimeo/YouTube links, not uploads.
+- Publishing writes `data/projects.json` plus any new photos as a **single**
+  commit via the GitHub Git Data API, so Vercel rebuilds once per publish.
+- It needs a fine-grained GitHub token with `Contents: Read and write` on this
+  repo, pasted into the panel once (stored in the browser, never in the repo).
+- `data/projects.json` is the only file the panel writes, which is why projects
+  were split out of `content.js` — a publish can't break the surrounding JS.
+
+After publishing, `git pull` locally before making further changes, or the repo
+and your working copy drift apart.
 
 ## 🎨 Customize Design
 
