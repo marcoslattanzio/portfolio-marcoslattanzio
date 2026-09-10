@@ -22,28 +22,36 @@ export default function FilmstripSection({ title, images }) {
 
   useIsoLayoutEffect(() => {
     if (prefersReducedMotion()) return;
-    if (window.innerWidth < 768) return; // móvil: scroll horizontal nativo
     const section = sectionRef.current;
     const track = trackRef.current;
     const dist = () => track.scrollWidth - window.innerWidth;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => "+=" + dist(),
-          pin: true,
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
+      // El anclaje al scroll vertical es SOLO de escritorio; en móvil la tira
+      // se desliza con el dedo. Antes esto se decidía con una lectura suelta
+      // de window.innerWidth al montar: si en ese instante el valor no era el
+      // definitivo, el móvil se quedaba con el anclaje puesto y había que
+      // bajar la página para que el carrete avanzara. matchMedia evalúa la
+      // consulta de verdad y se deshace sola al cruzar el límite o al girar
+      // el teléfono.
+      gsap.matchMedia().add("(min-width: 768px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => "+=" + dist(),
+            pin: true,
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
+        });
+        tl.to(track, { x: () => -dist(), ease: "none" }, 0).fromTo(
+          progressRef.current,
+          { scaleX: 0 },
+          { scaleX: 1, ease: "none" },
+          0,
+        );
       });
-      tl.to(track, { x: () => -dist(), ease: "none" }, 0).fromTo(
-        progressRef.current,
-        { scaleX: 0 },
-        { scaleX: 1, ease: "none" },
-        0,
-      );
     }, section);
 
     // El recorrido depende del ancho de la tira, que no se conoce hasta que
@@ -102,7 +110,7 @@ export default function FilmstripSection({ title, images }) {
       </div>
 
       {/* tira: en móvil se desliza con el dedo; en escritorio la mueve el scroll */}
-      <div className="mt-10 overflow-x-auto pb-8 md:mt-14 md:overflow-visible md:pb-24">
+      <div className="swipe-x mt-10 overflow-x-auto pb-8 md:mt-14 md:overflow-visible md:pb-24">
         <div
           ref={trackRef}
           className="flex w-max items-end gap-4 px-5 will-change-transform md:gap-6 md:px-10"

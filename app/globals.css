@@ -234,20 +234,20 @@ html.lenis body {
 }
 
 /* ---------------------------------------------------------------------------
-   Tira de fotos del hero en móvil
+   Tiras que se deslizan con el dedo (hero en móvil y carrete de fragmentos)
 --------------------------------------------------------------------------- */
-.hero-strip {
-  /* la barra sobra: el imán de encuadre y la línea de progreso ya dicen
-     dónde estás, y en el móvil ni se vería */
+.swipe-x {
+  /* la barra sobra: en el móvil ni se vería y ensucia el diseño */
   scrollbar-width: none;
   -ms-overflow-style: none;
   /* que al llegar al final el gesto no siga hacia el navegador (en iOS eso
      dispara el "atrás" y te saca de la página a media pasada) */
   overscroll-behavior-x: contain;
-  /* iOS necesita esto explícito para dar inercia a un scroll horizontal */
+  /* iOS necesita esto explícito para dar inercia a un scroll horizontal: sin
+     ello el dedo arrastra pero no lanza, y el gesto se siente muerto */
   -webkit-overflow-scrolling: touch;
 }
-.hero-strip::-webkit-scrollbar {
+.swipe-x::-webkit-scrollbar {
   display: none;
 }
 

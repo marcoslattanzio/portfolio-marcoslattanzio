@@ -23,7 +23,7 @@ const SPEED = 46;
 
 // móvil: cada cuánto salta a la siguiente foto, y cuánto espera para reanudar
 // después de que sueltes el dedo
-const STEP_EVERY = 2000;
+const STEP_EVERY = 4000;
 const RESUME_AFTER = 1800;
 
 export default function HeroConstellation({ name, role, images }) {
@@ -314,7 +314,7 @@ export default function HeroConstellation({ name, role, images }) {
             contenido se repite, en pantalla no se ve ningún salto. */}
         <div
           data-hero-strip
-          className="hero-strip flex snap-x snap-mandatory gap-3 overflow-x-auto px-[19vw]"
+          className="swipe-x flex snap-x snap-mandatory gap-3 overflow-x-auto px-[19vw]"
         >
           {[...images, ...images].map((img, i) => (
             <figure
