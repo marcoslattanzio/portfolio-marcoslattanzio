@@ -1,11 +1,11 @@
 [
   {
-    "slug": "proyecto-01",
-    "title": "Proyecto Uno",
-    "year": "2025",
-    "category": "film",
+    "slug": "fotografia-de-studio",
+    "title": "Fotografía de studio",
+    "year": "2026",
+    "category": "foto",
     "featured": 1,
-    "client": "Cliente / Marca",
+    "client": "Mezlan Shoes",
     "description": "Descripción breve del proyecto: concepto, enfoque y resultado. Dos o tres frases que den contexto sin desvelarlo todo.",
     "sections": [
       {
