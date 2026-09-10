@@ -4,7 +4,6 @@ import HeroConstellation from "@/components/HeroConstellation";
 import HeroMedia from "@/components/HeroMedia";
 import HeroText from "@/components/HeroText";
 import TextReveal from "@/components/TextReveal";
-import Collage from "@/components/Collage";
 import FeaturedAccordion from "@/components/FeaturedAccordion";
 import Marquee from "@/components/Marquee";
 import StatementStack from "@/components/StatementStack";
@@ -36,19 +35,6 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-cream/25" />
         <HeroText title={home.hero.title} subtitle={home.hero.subtitle} />
-      </section>
-
-      {/* COLLAGE flotante con parallax */}
-      <section className="mx-auto max-w-[1600px] px-5 py-28 md:px-10 md:py-44">
-        <p className="mb-4 hidden text-xs uppercase tracking-[0.18em] text-muted md:block">
-          {home.collage.eyebrow}
-        </p>
-        <TextReveal
-          as="h2"
-          text={home.collage.title}
-          className="mb-16 hidden max-w-3xl text-3xl font-light leading-[1.15] tracking-tight md:mb-28 md:block md:text-5xl"
-        />
-        <Collage images={home.collage.images} />
       </section>
 
       {/* PROYECTOS DESTACADOS */}

@@ -128,37 +128,26 @@ export const home = {
       {
         "src": "/images/constellation-15.jpg",
         "alt": ""
-      }
-    ]
-  },
-  "collage": {
-    "eyebrow": "(01) — Selección",
-    "title": "Fragmentos de trabajos recientes",
-    "images": [
+      },
       {
         "src": "/images/Recurso 6.jpg",
-        "alt": "Fragmento 01",
-        "speed": 1.4
+        "alt": "Fragmento 01"
       },
       {
         "src": "/images/Recurso 23.jpg",
-        "alt": "Fragmento 02",
-        "speed": -0.8
+        "alt": "Fragmento 02"
       },
       {
         "src": "/images/Recurso 29.jpg",
-        "alt": "Fragmento 03",
-        "speed": 0.6
+        "alt": "Fragmento 03"
       },
       {
         "src": "/images/Recurso 24.jpg",
-        "alt": "Fragmento 04",
-        "speed": -1.2
+        "alt": "Fragmento 04"
       },
       {
         "src": "/images/Recurso 3.jpg",
-        "alt": "Fragmento 05",
-        "speed": 1
+        "alt": "Fragmento 05"
       }
     ]
   },

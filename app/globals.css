@@ -187,17 +187,35 @@ html.lenis body {
 }
 
 /* ---------------------------------------------------------------------------
-   Constelación del hero — cada foto trae su posición de escritorio (--d-*) y
-   una de móvil (--m-*) más compacta; el breakpoint decide cuál se usa.
+   Tira del hero en escritorio: avanza sola, así que las fotos entran y salen
+   por los lados. Sin esto se cortarían en seco contra el borde de la ventana;
+   la máscara las funde y hace que el movimiento no tenga principio ni final.
 --------------------------------------------------------------------------- */
-.const-item {
-  left: var(--m-left);
-  top: var(--m-top);
+.hero-marquee {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
 }
-@media (min-width: 768px) {
-  .const-item {
-    left: var(--d-left);
-    top: var(--d-top);
+/* Si el sistema pide menos animación la tira no avanza, y con overflow oculto
+   solo se verían las primeras fotos. Aquí se puede desplazar a mano. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-marquee {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .hero-marquee::-webkit-scrollbar {
+    display: none;
   }
 }
 
