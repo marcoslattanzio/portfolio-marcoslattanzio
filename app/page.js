@@ -27,7 +27,10 @@ export default function HomePage() {
       />
 
       {/* VÍDEO a pantalla completa con el nombre */}
-      <section className="relative h-auto md:h-svh w-full" style={{ aspectRatio: "16/9" }}>
+      {/* El 16:9 manda en todos los tamaños. Antes en escritorio se imponía
+          h-svh, la sección dejaba de ser 16:9 y el vídeo se recortaba por los
+          lados para rellenarla. */}
+      <section className="relative aspect-[16/9] w-full">
         <HeroMedia
           video={home.hero.video}
           image={home.hero.image}

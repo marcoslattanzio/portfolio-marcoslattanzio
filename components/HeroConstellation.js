@@ -16,9 +16,15 @@ import TextReveal from "@/components/TextReveal";
 //   · escritorio → avanza sola y en continuo, porque no hay dedo que deslizar
 // El aspecto es el mismo en ambos; lo único que cambia es quién la mueve.
 
-// píxeles por segundo del avance automático. Lento a propósito: es un fondo
-// del que se mira una foto al pasar, no un carrusel que exige atención.
+// píxeles por segundo del avance automático en escritorio. Lento a propósito:
+// es un fondo del que se mira una foto al pasar, no un carrusel que exige
+// atención.
 const SPEED = 46;
+
+// móvil: cada cuánto salta a la siguiente foto, y cuánto espera para reanudar
+// después de que sueltes el dedo
+const STEP_EVERY = 2000;
+const RESUME_AFTER = 1800;
 
 export default function HeroConstellation({ name, role, images }) {
   const sectionRef = useRef(null);
@@ -32,7 +38,6 @@ export default function HeroConstellation({ name, role, images }) {
     if (!strip) return;
 
     const cards = gsap.utils.toArray(strip.querySelectorAll("[data-hero-card]"));
-    const bar = sectionRef.current.querySelector("[data-hero-progress]");
     if (!cards.length) return;
 
     const pictures = cards.map((card) => card.querySelector("[data-hero-img]"));
@@ -82,13 +87,6 @@ export default function HeroConstellation({ name, role, images }) {
         }
       });
 
-      // el pulgar mide un cuarto de la barra, así que puede recorrer tres
-      // veces su propio ancho de un extremo al otro
-      if (bar) {
-        const room = strip.scrollWidth - strip.clientWidth;
-        const progress = room > 0 ? strip.scrollLeft / room : 0;
-        bar.style.transform = `translateX(${progress * 300}%)`;
-      }
     };
 
     const onScroll = () => {
@@ -116,11 +114,108 @@ export default function HeroConstellation({ name, role, images }) {
       );
     }
 
+    /* -------- avance automático, con el dedo por encima de todo -------- */
+
+    // paso = una foto con su hueco; juego = las fotos originales, sin la copia
+    const stepWidth = () => cards[1].offsetLeft - cards[0].offsetLeft;
+    const setWidth = () =>
+      cards[cards.length / 2].offsetLeft - cards[0].offsetLeft;
+
+    // El salto invisible del bucle: al pasar de un juego se retrocede uno
+    // entero. Como el contenido se repite exactamente, en pantalla no cambia
+    // nada; solo evita llegar al final de la tira y quedarse ahí parada.
+    const wrap = () => {
+      const set = setWidth();
+      if (set > 0 && strip.scrollLeft >= set) strip.scrollLeft -= set;
+    };
+
+    let holding = false;
+    let ticker = null;
+    let resumeTimer = null;
+    let step = null;
+    let teardown = null;
+
+    const advance = () => {
+      if (holding || document.hidden) return;
+      // El imán y una animación de scrollLeft se pelean: el navegador intenta
+      // encajar la foto en cada fotograma y el movimiento sale a tirones. Se
+      // desactiva mientras dura el salto y se devuelve al acabar, para que el
+      // dedo lo siga teniendo.
+      strip.style.scrollSnapType = "none";
+      step = gsap.to(strip, {
+        scrollLeft: strip.scrollLeft + stepWidth(),
+        duration: 0.8,
+        ease: "power2.inOut",
+        onComplete: () => {
+          strip.style.scrollSnapType = "";
+          wrap();
+        },
+      });
+    };
+
+    const play = () => {
+      clearInterval(ticker);
+      ticker = setInterval(advance, STEP_EVERY);
+    };
+    const pause = () => {
+      clearInterval(ticker);
+      ticker = null;
+    };
+
+    // mientras tocas, la tira es tuya
+    const grab = () => {
+      holding = true;
+      step?.kill();
+      strip.style.scrollSnapType = "";
+      pause();
+      clearTimeout(resumeTimer);
+    };
+    const release = () => {
+      if (!holding) return;
+      holding = false;
+      wrap();
+      // un respiro antes de retomarlo: reanudar al instante se sentiría como
+      // si te quitara la tira de las manos
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(play, RESUME_AFTER);
+    };
+
+    const auto = !prefersReducedMotion();
+
+    if (auto) {
+      strip.addEventListener("pointerdown", grab, { passive: true });
+      window.addEventListener("pointerup", release, { passive: true });
+      window.addEventListener("pointercancel", release, { passive: true });
+
+      // fuera de la pantalla no tiene sentido que siga avanzando: gasta
+      // batería y te la encuentras movida al volver arriba
+      const io = new IntersectionObserver(
+        ([entry]) => (entry.isIntersecting ? play() : pause()),
+        { threshold: 0.15 },
+      );
+      io.observe(strip);
+
+      const onVisibility = () => (document.hidden ? pause() : play());
+      document.addEventListener("visibilitychange", onVisibility);
+
+      teardown = () => {
+        io.disconnect();
+        document.removeEventListener("visibilitychange", onVisibility);
+        strip.removeEventListener("pointerdown", grab);
+        window.removeEventListener("pointerup", release);
+        window.removeEventListener("pointercancel", release);
+      };
+    }
+
     return () => {
       strip.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", update);
       if (queued) cancelAnimationFrame(queued);
       entrance?.kill();
+      pause();
+      clearTimeout(resumeTimer);
+      step?.kill();
+      teardown?.();
     };
   }, []);
 
@@ -211,19 +306,22 @@ export default function HeroConstellation({ name, role, images }) {
         />
       </div>
 
-      {/* MÓVIL: se desliza con el dedo */}
+      {/* MÓVIL: avanza sola y el dedo manda cuando la tocas */}
       <div className="pb-12 md:hidden">
-        {/* El relleno lateral vale (100 - 62) / 2 para que la primera y la
-            última foto también puedan quedar centradas por el imán. */}
+        {/* El relleno lateral vale (100 - 62) / 2 para que las fotos queden
+            centradas por el imán. El juego va dos veces, como en escritorio:
+            al pasar de largo se retrocede un juego entero de golpe y, como el
+            contenido se repite, en pantalla no se ve ningún salto. */}
         <div
           data-hero-strip
           className="hero-strip flex snap-x snap-mandatory gap-3 overflow-x-auto px-[19vw]"
         >
-          {images.map((img, i) => (
+          {[...images, ...images].map((img, i) => (
             <figure
-              key={img.src + i}
+              key={`${img.src}-${i}`}
               data-hero-card
               className="w-[62vw] shrink-0 snap-center will-change-transform"
+              aria-hidden={i >= images.length ? true : undefined}
             >
               <div
                 data-hero-inner
@@ -242,19 +340,11 @@ export default function HeroConstellation({ name, role, images }) {
             </figure>
           ))}
         </div>
-
-        {/* progreso: dice cuánto queda por deslizar sin añadir ruido */}
-        <div className="mx-auto mt-7 h-px w-24 overflow-hidden bg-line">
-          <div
-            data-hero-progress
-            className="h-full w-1/4 bg-ink will-change-transform"
-          />
-        </div>
       </div>
 
       {/* ESCRITORIO: la misma tira, avanzando sola */}
       <div className="hero-marquee hidden overflow-hidden pb-16 md:block">
-        <div data-hero-track className="flex w-max gap-4 will-change-transform">
+        <div data-hero-track className="flex w-max gap-7 will-change-transform">
           {/* el juego va dos veces para que el bucle no tenga costura */}
           {[...images, ...images].map((img, i) => (
             <figure

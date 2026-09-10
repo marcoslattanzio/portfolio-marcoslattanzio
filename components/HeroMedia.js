@@ -32,24 +32,18 @@ export default function HeroMedia({ video, image, className = "" }) {
         { opacity: 0, scale: 1.08 },
         { opacity: 1, scale: 1, duration: 1.8, delay: 1.1, ease: "power3.out" },
       );
-      // parallax: en la carga vale 0 y crece solo al alejarse del top
-      gsap.to(media, {
-        yPercent: 12,
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrap,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
+      // Aquí había un parallax vertical del vídeo. Se quitó al fijar el 16:9:
+      // el fotograma ocupa ahora el marco exacto, así que desplazarlo dejaba
+      // una franja vacía arriba o abajo — justo lo contrario de verlo entero.
     }, wrap);
 
     return () => ctx.revert();
   }, []);
 
+  // object-contain en todos los tamaños: garantiza el fotograma entero. Antes
+  // en escritorio era object-cover, que rellena recortando lo que sobra.
   const mediaClass =
-    "absolute left-0 top-0 h-full w-full object-contain md:object-cover will-change-transform";
+    "absolute left-0 top-0 h-full w-full object-contain will-change-transform";
 
   return (
     <div ref={wrapRef} className={`overflow-hidden ${className}`}>

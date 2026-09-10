@@ -108,10 +108,19 @@ export default function Header() {
         }`}
       >
         <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-5 md:px-10">
+          {/* En la portada el nombre ya aparece enorme en el hero, a un dedo de
+              distancia: en móvil se leía dos veces seguidas. Aquí se retira
+              mientras estás arriba del todo y vuelve al primer scroll. Solo en
+              la portada y solo en móvil — en el resto es la forma de volver
+              al inicio, y en escritorio hay sitio de sobra. */}
           <Link
             href="/"
             onClick={(e) => navTo(e, "/")}
-            className="text-sm font-normal uppercase tracking-[0.18em]"
+            className={`text-sm font-normal uppercase tracking-[0.18em] transition-opacity duration-500 ${
+              normPath(pathname) === "/" && !scrolled && !open
+                ? "pointer-events-none opacity-0 md:pointer-events-auto md:opacity-100"
+                : "opacity-100"
+            }`}
           >
             {site.name}
           </Link>

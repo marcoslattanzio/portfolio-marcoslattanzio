@@ -191,21 +191,35 @@ html.lenis body {
    por los lados. Sin esto se cortarían en seco contra el borde de la ventana;
    la máscara las funde y hace que el movimiento no tenga principio ni final.
 --------------------------------------------------------------------------- */
+/* Antes esto era una máscara que difuminaba la tira hacia transparente, y
+   sobre el fondo oscuro se leía como una viñeta negra. Ahora son dos paneles
+   de cristal esmerilado: no borran la foto, la desenfocan. El degradado va en
+   la máscara del panel, así el desenfoque es total en el filo y se disuelve
+   hacia dentro, sin un canto donde empiece. */
 .hero-marquee {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 7%,
-    #000 93%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 7%,
-    #000 93%,
-    transparent
-  );
+  position: relative;
+}
+.hero-marquee::before,
+.hero-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: clamp(70px, 10vw, 190px);
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.hero-marquee::before {
+  left: 0;
+  -webkit-mask-image: linear-gradient(to right, #000 15%, transparent);
+  mask-image: linear-gradient(to right, #000 15%, transparent);
+}
+.hero-marquee::after {
+  right: 0;
+  -webkit-mask-image: linear-gradient(to left, #000 15%, transparent);
+  mask-image: linear-gradient(to left, #000 15%, transparent);
 }
 /* Si el sistema pide menos animación la tira no avanza, y con overflow oculto
    solo se verían las primeras fotos. Aquí se puede desplazar a mano. */
