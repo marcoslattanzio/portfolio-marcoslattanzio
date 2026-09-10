@@ -202,6 +202,24 @@ html.lenis body {
 }
 
 /* ---------------------------------------------------------------------------
+   Tira de fotos del hero en móvil
+--------------------------------------------------------------------------- */
+.hero-strip {
+  /* la barra sobra: el imán de encuadre y la línea de progreso ya dicen
+     dónde estás, y en el móvil ni se vería */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* que al llegar al final el gesto no siga hacia el navegador (en iOS eso
+     dispara el "atrás" y te saca de la página a media pasada) */
+  overscroll-behavior-x: contain;
+  /* iOS necesita esto explícito para dar inercia a un scroll horizontal */
+  -webkit-overflow-scrolling: touch;
+}
+.hero-strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
    Desplegables del panel de /admin
 
    La lista que se abre la dibuja el sistema operativo, no la página, y toma

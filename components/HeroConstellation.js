@@ -235,6 +235,107 @@ export default function HeroConstellation({ name, role, images }) {
     };
   }, []);
 
+  // Tira de móvil. Va en su propio efecto porque el desplazamiento es nativo:
+  // el enfoque y el progreso deben seguir funcionando aunque el sistema pida
+  // menos animación — lo único que se salta entonces es la entrada.
+  useIsoLayoutEffect(() => {
+    const strip = sectionRef.current?.querySelector("[data-hero-strip]");
+    if (!strip) return;
+
+    const cards = gsap.utils.toArray(strip.querySelectorAll("[data-hero-card]"));
+    const bar = sectionRef.current.querySelector("[data-hero-progress]");
+    if (!cards.length) return;
+
+    // Se escribe el estilo a mano en vez de usar GSAP: esto corre en cada
+    // fotograma del desplazamiento y son 15 fotos, así que cuanto menos haya
+    // por medio, mejor. (Y gsap.quickSetter no aplica transformaciones sobre
+    // elementos que GSAP no ha tocado antes: dejaba el scale sin efecto.)
+    const pictures = cards.map((card) => card.querySelector("[data-hero-img]"));
+
+    let queued = 0;
+    const update = () => {
+      queued = 0;
+
+      // Se mide con coordenadas de pantalla y no con offsetLeft/scrollLeft:
+      // el offsetParent de las tarjetas es el body, no la tira, así que
+      // mezclarlos compara dos orígenes distintos. Hoy cuadra de casualidad
+      // porque la tira empieza en el borde; con cualquier margen lateral el
+      // foco se descolocaría en silencio.
+      // El ancho se toma de offsetWidth a propósito: getBoundingClientRect
+      // devuelve el ancho YA escalado por esta misma función, y usarlo se
+      // realimentaría. El centro sí es fiable, porque la escala es central.
+      const stripRect = strip.getBoundingClientRect();
+      const middle = stripRect.left + stripRect.width / 2;
+
+      // primero todas las lecturas y luego todas las escrituras: intercalarlas
+      // obliga al navegador a recalcular la maquetación en cada vuelta
+      const offsets = cards.map((card) => {
+        const rect = card.getBoundingClientRect();
+        // desvío con signo: -1 a la izquierda del centro, +1 a la derecha
+        return Math.max(
+          -1,
+          Math.min(
+            1,
+            (rect.left + rect.width / 2 - middle) / card.offsetWidth,
+          ),
+        );
+      });
+
+      offsets.forEach((offset, i) => {
+        const away = Math.abs(offset);
+        cards[i].style.opacity = 1 - away * 0.55;
+        cards[i].style.transform = `scale(${1 - away * 0.07})`;
+
+        // la foto se retrasa respecto a su marco: da sensación de mirar por
+        // una ventana en vez de arrastrar una lámina plana, y es lo que
+        // distingue esta tira de las otras dos que ya hay más abajo
+        if (pictures[i]) {
+          pictures[i].style.transform = `translateX(${offset * -5}%)`;
+        }
+      });
+
+      // el pulgar mide un cuarto de la barra, así que puede recorrer tres
+      // veces su propio ancho de un extremo al otro
+      if (bar) {
+        const room = strip.scrollWidth - strip.clientWidth;
+        const progress = room > 0 ? strip.scrollLeft / room : 0;
+        bar.style.transform = `translateX(${progress * 300}%)`;
+      }
+    };
+
+    const onScroll = () => {
+      if (!queued) queued = requestAnimationFrame(update);
+    };
+    strip.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+
+    let entrance = null;
+    if (!prefersReducedMotion()) {
+      // entran escalonadas desde la derecha, ya con el preloader fuera: el
+      // propio movimiento insinúa que la tira se desliza
+      entrance = gsap.fromTo(
+        cards.map((c) => c.querySelector("[data-hero-inner]")),
+        { opacity: 0, xPercent: 14 },
+        {
+          opacity: 1,
+          xPercent: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.06,
+          delay: 1.15,
+        },
+      );
+    }
+
+    return () => {
+      strip.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", update);
+      if (queued) cancelAnimationFrame(queued);
+      entrance?.kill();
+    };
+  }, []);
+
   return (
     <section ref={sectionRef} className="w-full">
       {/* DESKTOP: constelación flotante (h-svh) */}
@@ -294,7 +395,11 @@ export default function HeroConstellation({ name, role, images }) {
         </div>
       </div>
 
-      {/* MOBILE: cuadrícula simple de fotos + nombre y claim */}
+      {/* MOBILE: nombre + tira deslizable de fotos.
+          Antes era una cuadrícula de dos columnas: con 15 fotos son ocho filas,
+          casi dos pantallas de alto solo de hueco. Aquí van en una sola fila
+          horizontal, así que el hero cabe en una pantalla y las fotos se ven
+          más grandes que en la cuadrícula. */}
       <div className="flex flex-col md:hidden">
         {/* nombre + rol */}
         <div className="flex h-48 flex-col items-center justify-center px-5 text-center">
@@ -312,17 +417,44 @@ export default function HeroConstellation({ name, role, images }) {
           />
         </div>
 
-        {/* cuadrícula 2 columnas */}
-        <div className="grid grid-cols-2 gap-3 px-5 pb-8">
-          {images.map((img, i) => (
-            <div key={img.src + i} className="aspect-square overflow-hidden rounded-sm">
-              <img
-                src={img.src}
-                alt={img.alt}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          ))}
+        <div className="pb-12">
+          {/* El relleno lateral vale (100 - 62) / 2 para que la primera y la
+              última foto también puedan quedar centradas por el imán. */}
+          <div
+            data-hero-strip
+            className="hero-strip flex snap-x snap-mandatory gap-3 overflow-x-auto px-[19vw]"
+          >
+            {images.map((img, i) => (
+              <figure
+                key={img.src + i}
+                data-hero-card
+                className="w-[62vw] shrink-0 snap-center will-change-transform"
+              >
+                <div
+                  data-hero-inner
+                  className="overflow-hidden rounded-[3px] will-change-transform"
+                >
+                  {/* algo más ancha que su marco y recentrada: así queda
+                      margen para desplazarla sin descubrir los bordes */}
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    draggable={false}
+                    data-hero-img
+                    className="-ml-[6%] aspect-[3/4] w-[112%] object-cover will-change-transform"
+                  />
+                </div>
+              </figure>
+            ))}
+          </div>
+
+          {/* progreso: dice cuánto queda por deslizar sin añadir ruido */}
+          <div className="mx-auto mt-7 h-px w-24 overflow-hidden bg-line">
+            <div
+              data-hero-progress
+              className="h-full w-1/4 bg-ink will-change-transform"
+            />
+          </div>
         </div>
       </div>
     </section>
