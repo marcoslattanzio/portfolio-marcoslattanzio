@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { home, projects, site } from "@/data/content";
+import { projects } from "@/data/content";
+import { useContent } from "@/components/ContentProvider";
 import HeroConstellation from "@/components/HeroConstellation";
 import HeroMedia from "@/components/HeroMedia";
 import HeroText from "@/components/HeroText";
@@ -10,6 +13,10 @@ import StatementStack from "@/components/StatementStack";
 import FilmstripSection from "@/components/FilmstripSection";
 
 export default function HomePage() {
+  // el contenido llega del proveedor para que el panel pueda sustituirlo en
+  // la vista previa; los proyectos tienen su propio panel y van aparte
+  const { home, site } = useContent();
+
   // Cada proyecto lleva su puesto en la portada (0 = no destacado). Antes esto
   // era una lista fija en content.js, que el panel de /admin no toca: para
   // rotarlos había que editar el código.

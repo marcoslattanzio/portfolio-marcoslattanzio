@@ -168,10 +168,36 @@ configure them locks you out rather than leaving the panel open.
 For local work, copy `.env.example` to `.env.local`. If you skip it, `/admin`
 just opens in dev without asking.
 
-## 📤 Publishing projects (/admin)
+## 📤 The content panel (/admin)
 
-`/admin` is a content panel for adding, editing, reordering and deleting
-projects without touching code.
+`/admin` asks which half you want and leads to two editors:
+
+- **`/admin/proyectos`** — add, edit, reorder and delete projects.
+- **`/admin/web`** — every text and image outside the projects: site details,
+  home page, Sobre mí, Contacto, menu and social labels. Fields are described
+  once in `app/admin/web/esquema.js`; the panel walks that list and renders
+  itself, so making something else editable is a line there, not a new form.
+
+Each editor writes exactly one file — `data/projects.json` or `data/site.json`
+— and `data/content.js` only hands those out. That separation is the safety
+property: whatever gets typed into the panel, a publish cannot break the
+JavaScript.
+
+### Live preview
+
+`/admin/web` shows the real site in an iframe at `?cms=1`, and posts the draft
+to it on every keystroke. Two pieces make that work:
+
+- `prefersReducedMotion()` returns true under `?cms=1`, which switches off
+  every animation site-wide. That matters because `TextReveal` splits text into
+  per-word spans to animate it, and live text replacement cannot survive that.
+- `ContentProvider` feeds the pages their content and swaps it on
+  `postMessage`. Pages read it through `useContent()` rather than importing
+  `data/content.js`, which is why `app/page.js`, `AboutContent` and
+  `ContactContent` are client components (the `page.js` files stay on the
+  server purely to export `metadata`).
+
+### Publishing projects
 
 - The **Proyecto destacado** field (0 = no, 1–4 = slot) drives the "Proyectos
   destacados" section on the home page, ordered by slot. Assigning a slot that

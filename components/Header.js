@@ -5,13 +5,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/hooks";
-import { site, nav, socials } from "@/data/content";
+import { useContent } from "@/components/ContentProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 
 // Header fijo minimalista: transparente arriba, se oculta al bajar y reaparece
 // al subir, con fondo crema + blur al despegarse del top. Incluye el menú
 // móvil overlay a pantalla completa con entrada escalonada.
 export default function Header() {
+  const { site, nav, socials } = useContent();
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);

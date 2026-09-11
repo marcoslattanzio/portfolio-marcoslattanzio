@@ -1,11 +1,15 @@
+"use client";
+
 import Link from "next/link";
-import { site, nav, socials } from "@/data/content";
+import { useContent } from "@/components/ContentProvider";
 import BackToTop from "@/components/BackToTop";
 import MeshText from "@/components/MeshText";
 
 // Footer: nombre grande, tres columnas iguales (menú, redes, contacto) y una
 // barra inferior con ©, claim y volver arriba.
 export default function Footer() {
+  const { site, nav, socials } = useContent();
+
   return (
     <footer className="border-t border-line">
       <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-10 md:py-24">

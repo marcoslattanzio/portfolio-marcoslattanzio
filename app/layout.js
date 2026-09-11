@@ -6,6 +6,7 @@ import ScrollManager from "@/components/ScrollManager";
 import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ContentProvider from "@/components/ContentProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,13 +45,15 @@ export default function RootLayout({ children }) {
     >
       <body className="flex min-h-screen flex-col bg-cream text-ink">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <LenisProvider>
-          <ScrollManager />
-          <Preloader />
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </LenisProvider>
+        <ContentProvider>
+          <LenisProvider>
+            <ScrollManager />
+            <Preloader />
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </LenisProvider>
+        </ContentProvider>
       </body>
     </html>
   );
