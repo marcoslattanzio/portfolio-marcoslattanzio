@@ -267,6 +267,7 @@ export default function HeroConstellation({ eyebrow, badge, headline, images }) 
       mq.add("(min-width: 768px)", () => {
         let tween = null;
         let pending = 0;
+        let step = 0; // lo que recorre una vuelta; lo necesita el arrastre
 
         const build = () => {
           tween?.kill();
@@ -283,8 +284,7 @@ export default function HeroConstellation({ eyebrow, badge, headline, images }) 
           // de una foto a su copia da el valor exacto (la resta entre dos
           // offsetLeft es válida porque ambas cuelgan del mismo padre).
           const cards = track.children;
-          const step =
-            cards[cards.length / 2].offsetLeft - cards[0].offsetLeft;
+          step = cards[cards.length / 2].offsetLeft - cards[0].offsetLeft;
 
           tween = gsap.to(track, {
             x: -step,
@@ -311,11 +311,59 @@ export default function HeroConstellation({ eyebrow, badge, headline, images }) 
         track.addEventListener("mouseenter", slow);
         track.addEventListener("mouseleave", resume);
 
+        /* ---------------------------------------------------- arrastre */
+        // La tira se puede coger y mover a mano. Al soltar no vuelve al
+        // principio: se recoloca la animación en el punto donde se ha quedado
+        // y sigue desde ahí, porque el recorrido es lineal y su progreso
+        // equivale exactamente a la posición (x = -step · progreso).
+        let dragging = false;
+        let desdeX = 0;
+        let desdePuntero = 0;
+
+        const agarrar = (e) => {
+          if (e.button !== 0 || !step) return;
+          dragging = true;
+          tween.pause();
+          desdePuntero = e.clientX;
+          desdeX = gsap.getProperty(track, "x");
+          // no hace falta capturar el puntero: el seguimiento y el soltar
+          // escuchan en window, así que el gesto no se pierde aunque el ratón
+          // salga de la tira o de la ventana
+          e.preventDefault(); // si no, el navegador arrastra la propia foto
+        };
+
+        const mover = (e) => {
+          if (!dragging) return;
+          // se envuelve dentro de una vuelta: así se puede arrastrar sin fin
+          // en los dos sentidos, igual que avanzando sola
+          gsap.set(track, {
+            x: gsap.utils.wrap(-step, 0, desdeX + (e.clientX - desdePuntero)),
+          });
+        };
+
+        const soltar = () => {
+          if (!dragging) return;
+          dragging = false;
+          tween.progress(-gsap.getProperty(track, "x") / step);
+          // sigue sola; si el ratón continúa encima, el frenado de hover la
+          // mantiene quieta hasta que lo apartes
+          tween.play();
+        };
+
+        track.addEventListener("pointerdown", agarrar);
+        window.addEventListener("pointermove", mover);
+        window.addEventListener("pointerup", soltar);
+        window.addEventListener("pointercancel", soltar);
+
         return () => {
           clearTimeout(pending);
           window.removeEventListener("resize", onResize);
           track.removeEventListener("mouseenter", slow);
           track.removeEventListener("mouseleave", resume);
+          track.removeEventListener("pointerdown", agarrar);
+          window.removeEventListener("pointermove", mover);
+          window.removeEventListener("pointerup", soltar);
+          window.removeEventListener("pointercancel", soltar);
           tween?.kill();
         };
       });
@@ -389,7 +437,10 @@ export default function HeroConstellation({ eyebrow, badge, headline, images }) 
 
       {/* ESCRITORIO: la misma tira, avanzando sola */}
       <div className="hero-marquee hidden overflow-hidden pb-16 md:block">
-        <div data-hero-track className="flex w-max gap-7 will-change-transform">
+        <div
+          data-hero-track
+          className="flex w-max cursor-grab select-none gap-7 will-change-transform active:cursor-grabbing"
+        >
           {/* el juego va dos veces para que el bucle no tenga costura */}
           {[...images, ...images].map((img, i) => (
             <figure

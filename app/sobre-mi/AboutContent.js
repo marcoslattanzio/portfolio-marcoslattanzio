@@ -13,8 +13,11 @@ export const metadata = { title: "Sobre mí" };
 export default function AboutContent() {
   const { about, site } = useContent();
 
+  // Sin fondo propio: usa el del body, como el resto de páginas. Antes había
+  // un degradado a emerald-50, un verde claro fijo de Tailwind que no sigue el
+  // tema: sobre el fondo oscuro dejaba toda la página lavada de verde.
   return (
-    <div className="overflow-hidden bg-gradient-to-br from-cream to-emerald-50/30 pb-28 md:pb-44">
+    <div className="overflow-hidden pb-28 md:pb-44">
       {/* 1 — Declaración de apertura, centrada */}
       <AboutHero
         statement={about.statement}
