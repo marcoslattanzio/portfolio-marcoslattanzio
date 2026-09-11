@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { useIsoLayoutEffect, prefersReducedMotion } from "@/lib/hooks";
-import TextReveal from "@/components/TextReveal";
 
 // Apertura: el nombre y, debajo, las fotos en una sola tira.
 //
@@ -26,8 +25,45 @@ const SPEED = 46;
 const STEP_EVERY = 4000;
 const RESUME_AFTER = 1800;
 
-export default function HeroConstellation({ name, role, images }) {
+export default function HeroConstellation({ eyebrow, badge, headline, images }) {
   const sectionRef = useRef(null);
+
+  /* ------------------------------------------------- entrada del titular */
+  useIsoLayoutEffect(() => {
+    if (prefersReducedMotion()) return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // el retardo espera a que el preloader se retire
+      gsap.fromTo(
+        ["[data-hero-eyebrow]", "[data-hero-frase]"],
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.1,
+          ease: "power3.out",
+          stagger: 0.12,
+          delay: 0.95,
+        },
+      );
+      gsap.fromTo(
+        "[data-hero-chip]",
+        { opacity: 0, scale: 0.6, rotate: -10 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotate: 0,
+          duration: 0.9,
+          ease: "back.out(1.7)",
+          delay: 1.05,
+        },
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   /* ---------------------------------------------------- móvil: se desliza */
   // Va en su propio efecto porque el desplazamiento es nativo: el enfoque y el
@@ -290,20 +326,29 @@ export default function HeroConstellation({ name, role, images }) {
 
   return (
     <section ref={sectionRef} className="w-full">
-      {/* nombre + rol */}
-      <div className="flex h-48 flex-col items-center justify-center px-5 text-center md:h-[34svh]">
-        <TextReveal
-          as="h1"
-          text={name}
-          className="max-w-5xl text-3xl font-light leading-[1.15] tracking-tight md:text-6xl"
-          delay={0.9}
-        />
-        <TextReveal
-          as="p"
-          text={role}
-          className="mt-3 max-w-2xl text-sm font-light tracking-tight text-ink/70 md:mt-6 md:text-xl"
-          delay={1.05}
-        />
+      {/* Quién eres y a qué te dedico, de un vistazo. Antes aquí solo estaba el
+          nombre grande: quien llegaba de fuera veía a una persona, pero no qué
+          hacía. El memoji va dentro del titular, no al lado, para que ancle la
+          frase en vez de flotar como un adorno. */}
+      <div className="flex flex-col items-center justify-center px-5 py-20 text-center md:min-h-[34svh] md:py-24">
+        <p
+          data-hero-eyebrow
+          className="mb-6 text-[0.65rem] uppercase tracking-[0.24em] text-muted md:mb-8 md:text-xs"
+        >
+          {eyebrow}
+        </p>
+
+        <h1 className="mx-auto max-w-4xl text-[1.75rem] font-light leading-[1.2] tracking-tight md:text-5xl md:leading-[1.15]">
+          {badge && (
+            <span
+              data-hero-chip
+              className="mr-2.5 inline-block h-9 w-9 -translate-y-1 overflow-hidden rounded-xl align-middle md:mr-4 md:h-14 md:w-14 md:rounded-2xl"
+            >
+              <img src={badge} alt="" className="h-full w-full object-cover" />
+            </span>
+          )}
+          <span data-hero-frase>{headline}</span>
+        </h1>
       </div>
 
       {/* MÓVIL: avanza sola y el dedo manda cuando la tocas */}

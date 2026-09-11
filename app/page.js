@@ -26,10 +26,11 @@ export default function HomePage() {
 
   return (
     <>
-      {/* APERTURA: constelación de fotos flotando alrededor de la frase */}
+      {/* APERTURA: quién soy y a qué me dedico, con la tira de fotos debajo */}
       <HeroConstellation
-        name={home.constellation.name}
-        role={home.constellation.role}
+        eyebrow={home.constellation.eyebrow}
+        badge={home.constellation.badge}
+        headline={home.constellation.headline}
         images={home.constellation.images}
       />
 

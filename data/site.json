@@ -61,8 +61,9 @@
       "subtitle": ""
     },
     "constellation": {
-      "name": "Marcos Lattanzio",
-      "role": "Filmmaker y Fotógrafo",
+      "eyebrow": "Marcos Lattanzio — Filmmaker y Fotógrafo",
+      "badge": "/images/memoji.png",
+      "headline": "Hago vídeo y fotografía para marcas que quieren contar algo.",
       "images": [
         {
           "src": "/images/constellation-10.jpg",

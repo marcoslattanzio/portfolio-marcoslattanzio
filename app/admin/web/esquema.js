@@ -30,8 +30,21 @@ export const SECCIONES = [
     nota: "Lo primero que se ve: el nombre y la tira de fotos.",
     pagina: "/",
     campos: [
-      { ruta: "home.constellation.name", etiqueta: "Nombre grande", tipo: "texto" },
-      { ruta: "home.constellation.role", etiqueta: "Debajo del nombre", tipo: "texto" },
+      {
+        ruta: "home.constellation.eyebrow",
+        etiqueta: "Línea pequeña de arriba",
+        tipo: "texto",
+      },
+      {
+        ruta: "home.constellation.badge",
+        etiqueta: "Icono junto a la frase",
+        tipo: "imagen",
+      },
+      {
+        ruta: "home.constellation.headline",
+        etiqueta: "Frase principal",
+        tipo: "area",
+      },
       {
         lista: "home.constellation.images",
         etiqueta: "Fotos de la tira",
