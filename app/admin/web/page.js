@@ -24,6 +24,24 @@ import { SECCIONES, escribir, leer } from "./esquema";
 // postMessage y se vuelve a pintar con el borrador. No es una imitación de la
 // web, es la web.
 
+// Cómo llamar a un elemento de una lista: su primer texto de verdad. Se
+// descartan las rutas de archivo, que no dicen nada al leerlas.
+function resumirItem(campo, item) {
+  const valores = campo.sub.map((sub) =>
+    sub.clave == null ? item : item?.[sub.clave],
+  );
+  const texto = valores.find(
+    (v) =>
+      typeof v === "string" &&
+      v.trim() &&
+      !v.startsWith("/") &&
+      !/^https?:/i.test(v) &&
+      !/\.(jpe?g|png|webp|avif|svg|mp4|webm)$/i.test(v),
+  );
+  if (!texto) return "";
+  return texto.length > 42 ? texto.slice(0, 42).trimEnd() + "…" : texto;
+}
+
 export default function WebEditor() {
   const { token, setToken, loading } = useAdminToken();
   const [contenido, setContenido] = useState(null);
@@ -245,12 +263,18 @@ export default function WebEditor() {
         <p className="text-[0.65rem] uppercase tracking-[0.18em] text-muted">
           {campo.etiqueta} ({items.length})
         </p>
-        {items.map((_, idx) => (
+        {items.map((item, idx) => (
           <div
             key={idx}
             className="space-y-4 rounded-xl border border-line bg-ink/[0.02] p-4"
           >
-            <p className="text-xs text-muted">{String(idx + 1).padStart(2, "0")}</p>
+            {/* el bloque se titula con su propio contenido en vez de con un
+                número: si no, para dar con "Quién soy" hay que abrir los tres
+                y leerlos, y el panel se vuelve una adivinanza */}
+            <p className="text-xs text-muted">
+              <span className="mr-2">{String(idx + 1).padStart(2, "0")}</span>
+              <span className="text-ink">{resumirItem(campo, item)}</span>
+            </p>
             {campo.sub.map((sub) =>
               pintarCampo(
                 sub.clave == null

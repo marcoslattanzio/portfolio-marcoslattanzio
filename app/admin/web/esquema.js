@@ -127,10 +127,10 @@ export const SECCIONES = [
       },
       {
         lista: "about.story",
-        etiqueta: "Trayectoria",
+        etiqueta: "Bloques numerados (Quién soy, Cómo trabajo…)",
         sub: [
-          { clave: "label", etiqueta: "Etapa", tipo: "texto" },
-          { clave: "body", etiqueta: "Texto", tipo: "area" },
+          { clave: "label", etiqueta: "Título del bloque", tipo: "texto" },
+          { clave: "body", etiqueta: "Texto del bloque", tipo: "area" },
         ],
       },
       {
